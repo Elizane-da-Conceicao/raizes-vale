@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Casal;
+use App\Services\CasalService;
 
 class CasalController extends Controller
 {

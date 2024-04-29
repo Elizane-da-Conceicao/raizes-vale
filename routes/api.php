@@ -8,6 +8,7 @@ use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\FamiliaColonizadoraController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DescendenciaController;
+use App\Http\Controllers\CasalController;
 
 
 /*
