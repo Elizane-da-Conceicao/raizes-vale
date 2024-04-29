@@ -17,7 +17,7 @@ class CreateDescendenciaTable extends Migration
             $table->increments('Descendencia_id');
             $table->unsignedInteger('Filho_id');
             $table->unsignedInteger('Casal_id');
-            $table->unsignedInteger('Data_criacao')->nullable();
+            $table->date('Data_criacao')->nullable();
             $table->foreign('Filho_id')->references('Pessoa_id')->on('pessoa');
             $table->foreign('Casal_id')->references('Casal_id')->on('casal');
         });
