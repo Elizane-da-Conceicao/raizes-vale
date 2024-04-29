@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Usuario extends Model
 {
     use HasFactory;
+    
+    public $timestamps = false;
 
     protected $table = 'usuario'; // Define o nome da tabela
 
@@ -20,5 +22,6 @@ class Usuario extends Model
         'data_criacao',
         'data_alteracao',
         'administrador',
+        'senha',
     ];
 }

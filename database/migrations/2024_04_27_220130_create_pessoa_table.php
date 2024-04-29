@@ -22,7 +22,7 @@ class CreatePessoaTable extends Migration
             $table->date('Data_obito')->nullable();
             $table->string('Local_nascimento', 255)->nullable();
             $table->string('Local_sepultamento', 255)->nullable();
-            $table->unsignedInteger('Resumo')->nullable();
+            $table->string('Resumo')->nullable();
             $table->enum('Validacao', ['1', '2'])->nullable();
             $table->enum('Colonizador', ['1', '2'])->default('2');
         });

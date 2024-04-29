@@ -14,17 +14,14 @@ class CreateDocumentoTable extends Migration
     public function up()
     {
         Schema::create('documento', function (Blueprint $table) {
-            $table->increments('Pessoa_id');
-            $table->string('Nome', 120)->nullable();
-            $table->enum('Sexo', ['M', 'F'])->nullable();
-            $table->date('Data_nascimento')->nullable();
-            $table->date('Data_casamento')->nullable();
-            $table->date('Data_obito')->nullable();
-            $table->string('Local_nascimento', 255)->nullable();
-            $table->string('Local_sepultamento', 255)->nullable();
-            $table->unsignedInteger('Resumo')->nullable();
+            $table->increments('documento_id');
+            $table->unsignedBigInteger('pessoa_id');
+            $table->string('Descricao');
+            $table->string('Caminho');
+            $table->string('Tipo_arquivo');
+            $table->timestamp('Data_criacao')->nullable();
+            $table->timestamp('Data_alteracao')->nullable();
             $table->enum('Validacao', ['1', '2'])->nullable();
-            $table->enum('Colonizador', ['1', '2'])->default('2');
         });
     }
 

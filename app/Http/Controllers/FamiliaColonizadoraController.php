@@ -3,54 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\FamiliaColonizadora; // Substituído de Pessoa para Familia
+use App\Services\FamiliaColonizadoraService; // Não alterado, presumindo que o serviço ainda seja válido para Família
 
 class FamiliaColonizadoraController extends Controller
 {
+    protected $familiaColonizadoraService;
+
+    public function __construct(FamiliaColonizadoraService $familiaColonizadoraService)
+    {
+        $this->familiaColonizadoraService = $familiaColonizadoraService;
+    }
+    
+    //Grava familia
     public function store(Request $request)
     {
-        $familiaColonizadora = new FamiliaColonizadora();
-        $familiaColonizadora->colonizador_id = $request->input('colonizador_id');
-        $familiaColonizadora->familia_id = $request->input('familia_id');
-        $familiaColonizadora->data_chegada = $request->input('data_chegada');
-        $familiaColonizadora->comentarios = $request->input('comentarios');
-        $familiaColonizadora->save();
-
-        return response()->json(['message' => 'Família colonizadora criada com sucesso', 'familia_colonizadora' => $familiaColonizadora], 201);
+        $retorno = $this->familiaColonizadoraService->store($request);
+        return response()->json(['message' => $retorno->message, 'familiaColonizadora' => $retorno->familiaColonizadora], $retorno->status_code);
     }
-
+    //Lista familias
     public function index()
     {
-        $familiasColonizadoras = FamiliaColonizadora::all();
-        return response()->json(['familias_colonizadoras' => $familiasColonizadoras], 200);
+        $familiaColonizadoras = FamiliaColonizadora::all(); 
+        return response()->json(['familiaColonizadoras' => $familiaColonizadoras], 200);
     }
-
+    //Altera familias
     public function update(Request $request, $id)
     {
-        $familiaColonizadora = FamiliaColonizadora::find($id);
-
-        if (!$familiaColonizadora) {
-            return response()->json(['message' => 'Família colonizadora não encontrada'], 404);
-        }
-
-        $familiaColonizadora->colonizador_id = $request->input('colonizador_id', $familiaColonizadora->colonizador_id);
-        $familiaColonizadora->familia_id = $request->input('familia_id', $familiaColonizadora->familia_id);
-        $familiaColonizadora->data_chegada = $request->input('data_chegada', $familiaColonizadora->data_chegada);
-        $familiaColonizadora->comentarios = $request->input('comentarios', $familiaColonizadora->comentarios);
-        $familiaColonizadora->save();
-
-        return response()->json(['message' => 'Família colonizadora atualizada com sucesso', 'familia_colonizadora' => $familiaColonizadora], 200);
+        $retorno = $this->familiaColonizadoraService->update($request);
+        return response()->json(['message' => $retorno->message, 'familiaColonizadora' => $retorno->familiaColonizadora], $retorno->status_code);
     }
-
+    //Deleta familias
     public function destroy($id)
     {
-        $familiaColonizadora = FamiliaColonizadora::find($id);
-
-        if (!$familiaColonizadora) {
-            return response()->json(['message' => 'Família colonizadora não encontrada'], 404);
-        }
-
-        $familiaColonizadora->delete();
-
-        return response()->json(['message' => 'Família colonizadora excluída com sucesso'], 200);
+        $retorno = $this->familiaColonizadoraService->delete($request);
+        return response()->json(['message' => $retorno->message, 'familiaColonizadora' => $retorno->familiaColonizadora], $retorno->status_code);
     }
 }

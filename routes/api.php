@@ -2,8 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\UsuarioController;
-
+use App\Http\Controllers\FamiliaController;
+use App\Http\Controllers\FamiliaColonizadoraController;
+use App\Http\Controllers\DocumentoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +33,7 @@ Route::prefix('usuarios')->group(function () {
     Route::get('/{id}', [UsuarioController::class, 'show']);
     Route::put('/{id}', [UsuarioController::class, 'update']);
     Route::delete('/{id}', [UsuarioController::class, 'destroy']);
+    Route::post('/logar', [UsuarioController::class, 'logar']);
 });
 
 Route::prefix('documentos')->group(function () {

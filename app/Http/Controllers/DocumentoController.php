@@ -3,52 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Documento; // Alteração de Familia para Documento
+use App\Services\DocumentoService; // Não alterado, presumindo que o serviço ainda seja válido para Documento
 
 class DocumentoController extends Controller
 {
+    protected $documentoService;
+
+    public function __construct(DocumentoService $documentoService)
+    {
+        $this->documentoService = $documentoService;
+    }
+    
+    //Grava documento
     public function store(Request $request)
     {
-        $documento = new Documento();
-        $documento->descricao = $request->input('descricao');
-        $documento->caminho = $request->input('caminho');
-        $documento->tipo_arquivo = $request->input('tipo_arquivo');
-        $documento->save();
-
-        return response()->json(['message' => 'Documento criado com sucesso', 'documento' => $documento], 201);
+        $retorno = $this->documentoService->store($request);
+        return response()->json(['message' => $retorno->message, 'documento' => $retorno->documento], $retorno->status_code);
     }
-
+    //Lista documentos
     public function index()
     {
-        $documentos = Documento::all();
+        $documentos = Documento::all(); // Alteração de Familia para Documento
         return response()->json(['documentos' => $documentos], 200);
     }
-
+    //Altera documentos
     public function update(Request $request, $id)
     {
-        $documento = Documento::find($id);
-
-        if (!$documento) {
-            return response()->json(['message' => 'Documento não encontrado'], 404);
-        }
-
-        $documento->descricao = $request->input('descricao', $documento->descricao);
-        $documento->caminho = $request->input('caminho', $documento->caminho);
-        $documento->tipo_arquivo = $request->input('tipo_arquivo', $documento->tipo_arquivo);
-        $documento->save();
-
-        return response()->json(['message' => 'Documento atualizado com sucesso', 'documento' => $documento], 200);
+        $retorno = $this->documentoService->update($request);
+        return response()->json(['message' => $retorno->message, 'documento' => $retorno->documento], $retorno->status_code);
     }
-
+    //Deleta documentos
     public function destroy($id)
     {
-        $documento = Documento::find($id);
-
-        if (!$documento) {
-            return response()->json(['message' => 'Documento não encontrado'], 404);
-        }
-
-        $documento->delete();
-
-        return response()->json(['message' => 'Documento excluído com sucesso'], 200);
+        $retorno = $this->documentoService->delete($request);
+        return response()->json(['message' => $retorno->message, 'documento' => $retorno->documento], $retorno->status_code);
     }
 }

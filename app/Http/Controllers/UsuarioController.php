@@ -4,59 +4,46 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Usuario;
+use App\Services\UsuarioService;
 
 class UsuarioController extends Controller
 {
+    
+    protected $usuarioService;
+
+    public function __construct(UsuarioService $usuarioService)
+    {
+        $this->usuarioService = $usuarioService;
+    }
+    
+    //Grava usuario
     public function store(Request $request)
     {
-        $usuario = new Usuario();
-        $usuario->Nome = $request->input('Nome');
-        $usuario->CPF = $request->input('CPF');
-        $usuario->Email = $request->input('Email');
-        $usuario->administrador = $request->input('administrador', '2');
-        $usuario->save();
-
-        return response()->json(['message' => 'Usuário criado com sucesso', 'usuario' => $usuario], 201);
+        $retorno = $this->usuarioService->store($request);
+        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
     }
-
-    /**
-     * Retorna todos os usuários.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //Lista Usuarios
     public function index()
     {
         $usuarios = Usuario::all();
         return response()->json(['usuarios' => $usuarios], 200);
     }
-
+    //Altera Usuarios
     public function update(Request $request, $id)
     {
-        $usuario = Usuario::find($id);
-
-        if (!$usuario) {
-            return response()->json(['message' => 'Usuário não encontrado'], 404);
-        }
-
-        $usuario->Nome = $request->input('Nome', $usuario->Nome);
-        $usuario->CPF = $request->input('CPF', $usuario->CPF);
-        $usuario->Email = $request->input('Email', $usuario->Email);
-        $usuario->administrador = $request->input('administrador', $usuario->administrador);
-        $usuario->save();
-
-        return response()->json(['message' => 'Usuário atualizado com sucesso', 'usuario' => $usuario], 200);
+        $retorno = $this->usuarioService->update($request);
+        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
     }
-    
+    //Deleta Usuarios
     public function destroy($id)
     {
-        $usuario = Usuario::find($id);
-
-        if (!$usuario) {
-            return response()->json(['message' => 'Usuário não encontrado'], 404);
-        }
-
-        $usuario->delete();
-
-        return response()->json(['message' => 'Usuário excluído com sucesso'], 200);
+        $retorno = $this->usuarioService->delete($request);
+        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
+    }
+    //Logar usuarios
+    public function logar(Request $request)
+    {
+        $retorno = $this->usuarioService->logar($request);
+        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
     }
 }

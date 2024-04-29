@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FamiliaColonizadora extends Model
 {
     use HasFactory;
+    public $timestamps = false;
 
     protected $table = 'familia_colonizadora';
 

@@ -21,6 +21,7 @@ class CreateUsuarioTable extends Migration
             $table->dateTime('data_criacao')->nullable();
             $table->dateTime('data_alteracao')->nullable();
             $table->enum('administrador', ['1', '2'])->nullable()->default('2');
+            $table->string('senha')->nullable();
         });
     }
 
