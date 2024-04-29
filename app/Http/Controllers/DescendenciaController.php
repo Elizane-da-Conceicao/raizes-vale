@@ -3,52 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Descendencia;
+use App\Services\DescendenciaService; 
 
 class DescendenciaController extends Controller
 {
+    protected $descendenciaService;
+
+    public function __construct(DescendenciaService $descendenciaService)
+    {
+        $this->descendenciaService = $descendenciaService;
+    }
+    
+    //Grava descendencia
     public function store(Request $request)
     {
-        $descendencia = new Descendencia();
-        $descendencia->filho_id = $request->input('filho_id');
-        $descendencia->casal_id = $request->input('casal_id');
-        $descendencia->data_criacao = now();
-        $descendencia->save();
-
-        return response()->json(['message' => 'Descendência criada com sucesso', 'descendencia' => $descendencia], 201);
+        $retorno = $this->descendenciaService->store($request);
+        return response()->json(['message' => $retorno->message, 'descendencia' => $retorno->descendencia], $retorno->status_code);
     }
-
+    //Lista descendencias
     public function index()
     {
-        $descendencias = Descendencia::all();
+        $descendencias = Descendencia::all(); 
         return response()->json(['descendencias' => $descendencias], 200);
     }
-
+    //Altera descendencias
     public function update(Request $request, $id)
     {
-        $descendencia = Descendencia::find($id);
-
-        if (!$descendencia) {
-            return response()->json(['message' => 'Descendência não encontrada'], 404);
-        }
-
-        $descendencia->filho_id = $request->input('filho_id', $descendencia->filho_id);
-        $descendencia->casal_id = $request->input('casal_id', $descendencia->casal_id);
-        $descendencia->data_criacao = now();
-        $descendencia->save();
-
-        return response()->json(['message' => 'Descendência atualizada com sucesso', 'descendencia' => $descendencia], 200);
+        $retorno = $this->descendenciaService->update($request);
+        return response()->json(['message' => $retorno->message, 'descendencia' => $retorno->descendencia], $retorno->status_code);
     }
-
+    //Deleta descendencias
     public function destroy($id)
     {
-        $descendencia = Descendencia::find($id);
-
-        if (!$descendencia) {
-            return response()->json(['message' => 'Descendência não encontrada'], 404);
-        }
-
-        $descendencia->delete();
-
-        return response()->json(['message' => 'Descendência excluída com sucesso'], 200);
+        $retorno = $this->descendenciaService->delete($request);
+        return response()->json(['message' => $retorno->message, 'descendencia' => $retorno->descendencia], $retorno->status_code);
     }
 }

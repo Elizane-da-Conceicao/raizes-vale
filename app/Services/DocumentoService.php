@@ -67,29 +67,4 @@ class DocumentoService
             'status_code' => 200,
         ];
     }
-    
-    public function logar(Request $request)
-    {
-        $request->validate([
-            'nome' => 'required',
-            'senha' => 'required',
-        ]);
-
-        $nomeDocumento = $request->input('nome');
-        $senha = $request->input('senha');
-
-        $documento = Documento::where('Nome', $nomeDocumento)->first();
-
-        if ($documento && $senha = $documento->senha) {
-            return (object) [
-                'message' => 'Documento logado com sucesso', 
-                'documento' => $documento, 
-                'status_code' => 200,
-            ];  
-        }
-        return (object) [
-            'message' => 'Nome de documento ou senha incorretos.', 
-            'status_code' => 400,
-        ];
-    }
 }
