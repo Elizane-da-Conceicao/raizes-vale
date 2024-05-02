@@ -19,24 +19,24 @@ class DocumentoController extends Controller
     public function store(Request $request)
     {
         $retorno = $this->documentoService->store($request);
-        return response()->json(['message' => $retorno->message, 'documento' => $retorno->documento], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Lista documentos
     public function index()
     {
-        $documentos = Documento::all(); // Alteração de Familia para Documento
+        $arvores = Arvore::all();
         return response()->json(['documentos' => $documentos], 200);
     }
     //Altera documentos
     public function update(Request $request, $id)
     {
         $retorno = $this->documentoService->update($request);
-        return response()->json(['message' => $retorno->message, 'documento' => $retorno->documento], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Deleta documentos
     public function destroy($id)
     {
         $retorno = $this->documentoService->delete($request);
-        return response()->json(['message' => $retorno->message, 'documento' => $retorno->documento], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

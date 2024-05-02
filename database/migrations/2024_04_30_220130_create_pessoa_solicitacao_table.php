@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePessoaTable extends Migration
+class CreatePessoaSolicitacaoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,18 @@ class CreatePessoaTable extends Migration
      */
     public function up()
     {
-        Schema::create('pessoa', function (Blueprint $table) {
-            $table->increments('Pessoa_id');
+        Schema::create('pessoa_solicitacao', function (Blueprint $table) {
+            $table->increments('Pessoa_id_solicitacao');
             $table->string('Nome', 120)->nullable();
             $table->enum('Sexo', ['M', 'F'])->nullable();
             $table->date('Data_nascimento')->nullable();
             $table->date('Data_casamento')->nullable();
             $table->date('Data_obito')->nullable();
+            $table->string('Motivo');
             $table->string('Local_nascimento', 255)->nullable();
             $table->string('Local_sepultamento', 255)->nullable();
             $table->string('Resumo')->nullable();
+            $table->enum('Validacao', ['1', '2', '3'])->nullable();
             $table->enum('Colonizador', ['1', '2'])->default('2');
         });
     }
@@ -34,6 +36,6 @@ class CreatePessoaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pessoa');
+        Schema::dropIfExists('pessoa_solicitacao');
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Services;
-use App\Models\Descendencia; 
+
+use App\Models\Arvore;
 use Illuminate\Http\Request;
 
-class DescendenciaService 
+class ArvoreService
 {
     protected $usuarioService;
 
@@ -29,61 +30,61 @@ class DescendenciaService
             $validacao = '2';
         }
 
-        $descendencia = new Descendencia(); 
-        $descendencia->Filho_id = $request->input('Filho_id');
-        $descendencia->Casal_id = $request->input('Casal_id');
-        $descendencia->validacao = $validacao;
-        $descendencia->Data_criacao = now();
-        $descendencia->save();
+        $arvore = new Arvore();
+        $arvore->descendencia_id = $request->input('descendencia_id');
+        $arvore->familia_id = $request->input('familia_id');
+        $arvore->validacao = $validacao;
+        $arvore->data_criacao = now();
+        $arvore->save();
 
         return (object) [
-            'message' => 'Descendencia criada com sucesso', 
-            'model' => $descendencia, 
+            'message' => 'Arvore criado com sucesso',
+            'model' => $arvore,
             'status_code' => 201,
         ];
     }
 
     public function update($request, $id)
     {
-        $descendencia = Descendencia::find($id); 
+        $arvore = Arvore::find($id);
 
-        if (!$descendencia) {
+        if (!$arvore) {
             return (object) [
-                'message' => 'Descendencia não encontrada', 
+                'message' => 'Arvore não encontrada.',
                 'model' => null,
                 'status_code' => 404,
             ];
         }
 
-        $descendencia->Filho_id = $request->input('Filho_id');
-        $descendencia->Casal_id = $request->input('Casal_id');
-        $descendencia->Data_alteracao = now();
-        $descendencia->save();
+        $arvore->descendencia_id = $request->input('descendencia_id', $arvore->descendencia_id);
+        $arvore->familia_id = $request->input('familia_id', $arvore->familia_id);
+        $arvore->data_alteracao = now();
+        $arvore->save();
 
         return (object) [
-            'message' => 'Descendencia atualizada com sucesso',
-            'model' => $descendencia,
+            'message' => 'Casal atualizado com sucesso',
+            'model' => $arvore,
             'status_code' => 200,
         ];
     }
 
     public function delete($id)
     {
-        $descendencia = Descendencia::find($id);
+        $arvore = Arvore::find($id);
 
-        if (!$descendencia) {
+        if (!$arvore) {
             return (object) [
-                'message' => 'Descendencia não encontrada',
+                'message' => 'Arvore não encontrada.',
                 'model' => null,
                 'status_code' => 404,
             ];
         }
 
-        $descendencia->delete();
+        $arvore->delete();
 
         return (object) [
-            'message' => 'Descendencia excluida com sucesso',
-            'model' => $descendencia,
+            'message' => 'Arvore excluída com sucesso',
+            'model' => $arvore,
             'status_code' => 200,
         ];
     }

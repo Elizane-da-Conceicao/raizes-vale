@@ -19,24 +19,24 @@ class FamiliaController extends Controller
     public function store(Request $request)
     {
         $retorno = $this->familiaService->store($request);
-        return response()->json(['message' => $retorno->message, 'familia' => $retorno->familia], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Lista familias
     public function index()
     {
-        $familias = Familia::all(); 
+        $arvores = Arvore::all();
         return response()->json(['familias' => $familias], 200);
     }
     //Altera familias
     public function update(Request $request, $id)
     {
         $retorno = $this->familiaService->update($request);
-        return response()->json(['message' => $retorno->message, 'familia' => $retorno->familia], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Deleta familias
     public function destroy($id)
     {
         $retorno = $this->familiaService->delete($request);
-        return response()->json(['message' => $retorno->message, 'familia' => $retorno->familia], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

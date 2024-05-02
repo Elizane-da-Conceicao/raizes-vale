@@ -5,21 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Documento extends Model
+class Familia extends Model
 {
     use HasFactory;
     public $timestamps = false;
 
-    protected $table = 'documento';
+    protected $table = 'familia_solicitacao';
 
-    protected $primaryKey = 'documento_id';
+    protected $primaryKey = 'familia_id_solicitacao';
 
     protected $fillable = [
-        'pessoa_id',
-        'Descricao',
-        'Caminho',
-        'Tipo_arquivo',
+        'Nome',
         'Data_criacao',
         'Data_alteracao',
+        'Resumo',
+        'Colonizador',
+        'Validacao',
+        'Motivo',
+        'usuario_id',
     ];
 }

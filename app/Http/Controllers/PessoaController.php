@@ -19,24 +19,30 @@ class PessoaController extends Controller
     public function store(Request $request)
     {
         $retorno = $this->pessoaService->store($request);
-        return response()->json(['message' => $retorno->message, 'pessoa' => $retorno->pessoa], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Lista pessoas
     public function index()
     {
-        $pessoas = Pessoa::all();
+        $arvores = Arvore::all();
         return response()->json(['pessoas' => $pessoas], 200);
     }
     //Altera pessoas
     public function update(Request $request, $id)
     {
         $retorno = $this->pessoaService->update($request);
-        return response()->json(['message' => $retorno->message, 'pessoa' => $retorno->pessoa], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Deleta pessoas
     public function destroy($id)
     {
         $retorno = $this->pessoaService->delete($request);
-        return response()->json(['message' => $retorno->message, 'pessoa' => $retorno->pessoa], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //Obter pessoa por id
+    public function show($id)
+    {
+        $retorno = $this->pessoaService->ObterPessoaporId($id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

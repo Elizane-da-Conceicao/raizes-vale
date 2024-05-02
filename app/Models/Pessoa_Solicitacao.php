@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Pessoa extends Model
 {
     public $timestamps = false;
-    protected $table = 'pessoa';
+    protected $table = 'pessoa_solicitacao';
 
-    protected $primaryKey = 'pessoa_id';
+    protected $primaryKey = 'pessoa_id_solicitacao';
 
     protected $fillable = [
         'Nome',
@@ -21,5 +21,9 @@ class Pessoa extends Model
         'Local_nascimento',
         'Local_sepultamento',
         'Resumo',
+        'Validacao',
+        'Colonizador',
+        'Motivo',
+        'usuario_id',
     ];
 }

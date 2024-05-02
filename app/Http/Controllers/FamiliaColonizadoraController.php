@@ -19,24 +19,24 @@ class FamiliaColonizadoraController extends Controller
     public function store(Request $request)
     {
         $retorno = $this->familiaColonizadoraService->store($request);
-        return response()->json(['message' => $retorno->message, 'familiaColonizadora' => $retorno->familiaColonizadora], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Lista familias
     public function index()
     {
-        $familiaColonizadoras = FamiliaColonizadora::all(); 
+        $arvores = Arvore::all(); 
         return response()->json(['familiaColonizadoras' => $familiaColonizadoras], 200);
     }
     //Altera familias
     public function update(Request $request, $id)
     {
         $retorno = $this->familiaColonizadoraService->update($request);
-        return response()->json(['message' => $retorno->message, 'familiaColonizadora' => $retorno->familiaColonizadora], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Deleta familias
     public function destroy($id)
     {
         $retorno = $this->familiaColonizadoraService->delete($request);
-        return response()->json(['message' => $retorno->message, 'familiaColonizadora' => $retorno->familiaColonizadora], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

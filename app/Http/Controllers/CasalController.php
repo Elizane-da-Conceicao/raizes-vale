@@ -8,49 +8,35 @@ use App\Services\CasalService;
 
 class CasalController extends Controller
 {
+    protected $casalService;
+
+    public function __construct(CasalService $casalService)
+    {
+        $this->casalService = $casalService;
+    }
+    
+    //Grava Casal
     public function store(Request $request)
     {
-        $casal = new Casal();
-        $casal->marido_id = $request->input('marido_id');
-        $casal->esposa_id = $request->input('esposa_id');
-        $casal->data_casamento = $request->input('data_casamento');
-        $casal->save();
-
-        return response()->json(['message' => 'Casal criado com sucesso', 'casal' => $casal], 201);
+        $retorno = $this->casalService->store($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
-
+    //Lista Casal
     public function index()
     {
-        $casais = Casal::all();
+        $arvores = Arvore::all();
         return response()->json(['casais' => $casais], 200);
     }
-
+    //Altera Casal
     public function update(Request $request, $id)
     {
-        $casal = Casal::find($id);
-
-        if (!$casal) {
-            return response()->json(['message' => 'Casal não encontrado'], 404);
-        }
-
-        $casal->marido_id = $request->input('marido_id', $casal->marido_id);
-        $casal->esposa_id = $request->input('esposa_id', $casal->esposa_id);
-        $casal->data_casamento = $request->input('data_casamento', $casal->data_casamento);
-        $casal->save();
-
-        return response()->json(['message' => 'Casal atualizado com sucesso', 'casal' => $casal], 200);
+        $retorno = $this->casalService->update($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
-
+    //Deleta Casal
     public function destroy($id)
     {
-        $casal = Casal::find($id);
-
-        if (!$casal) {
-            return response()->json(['message' => 'Casal não encontrado'], 404);
-        }
-
-        $casal->delete();
-
-        return response()->json(['message' => 'Casal excluído com sucesso'], 200);
+        $retorno = $this->casalService->delete($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

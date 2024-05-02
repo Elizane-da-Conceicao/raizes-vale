@@ -6,8 +6,18 @@ use Illuminate\Http\Request;
 
 class UsuarioService
 {
-    public function store(Request $request)
+    public function store($request)
     {
+
+        $usuarioExiste = Usuario::where('Email', $request->input('Email'))->first();
+        if ($usuarioExiste !== null) {
+            return (object) [
+                'message' => 'Ja possue um usuario cadastrado com esse Email.',
+                'model' => null,
+                'status_code' => 400,
+            ];
+        }
+
         $usuario = new Usuario();
         $usuario->Nome = $request->input('Nome');
         $usuario->CPF = $request->input('CPF');
@@ -19,18 +29,19 @@ class UsuarioService
 
         return (object) [
             'message' => 'Usuário criado com sucesso',
-            'usuario' => $usuario,
+            'model' => $usuario,
             'status_code' => 201,
         ];
     }
 
-    public function update(Request $request, $id)
+    public function update($request, $id)
     {
         $usuario = Usuario::find($id);
 
         if (!$usuario) {
             return (object) [
                 'message' => 'Usuário não encontrado',
+                'model' => null,
                 'status_code' => 404,
             ];
         }
@@ -45,7 +56,7 @@ class UsuarioService
 
         return (object) [
             'message' => 'Usuário atualizado com sucesso',
-            'usuario' => $usuario,
+            'model' => $usuario,
             'status_code' => 200,
         ];
     }
@@ -57,6 +68,7 @@ class UsuarioService
         if (!$usuario) {
             return (object) [
                 'message' => 'Usuário não encontrado',
+                'model' => null,
                 'status_code' => 404,
             ];
         }
@@ -65,22 +77,22 @@ class UsuarioService
 
         return (object) [
             'message' => 'Usuário excluido com sucesso',
-            'usuario' => $usuario,
+            'model' => $usuario,
             'status_code' => 200,
         ];
     }
     
-    public function logar(Request $request)
+    public function logar($request)
     {
         $request->validate([
-            'nome' => 'required',
+            'email' => 'required',
             'senha' => 'required',
         ]);
 
-        $nomeUsuario = $request->input('nome');
+        $email = $request->input('email');
         $senha = $request->input('senha');
 
-        $usuario = Usuario::where('Nome', $nomeUsuario)->first();
+        $usuario = Usuario::where('Email', $email)->first();
 
 
         if ($usuario && $senha = $usuario->senha) {
@@ -88,14 +100,34 @@ class UsuarioService
             //$request->session()->put('usuario_id', $usuario->id);
             return (object) [
                 'message' => 'Usuário logado  com sucesso',
-                'usuario' => $usuario,
+                'model' => $usuario,
                 'status_code' => 200,
             ];  
             //return redirect()->route('home');
         }
         return (object) [
-            'message' => 'Nome de usuário ou senha incorretos.',
+            'message' => 'Email de usuário ou senha incorretos.',
+            'model' => null,
             'status_code' => 400,
+        ];
+    }
+
+    public function ObterUsuarioPorId($id)
+    {
+        $usuario = Usuario::find($id);
+
+        if (!$usuario) {
+            return (object) [
+                'message' => 'Usuario não encontrada.',
+                'model' => null,
+                'status_code' => 404,
+            ];
+        }
+
+        return (object) [
+            'message' => 'Usuario encontrada.',
+            'model' => $usuario,
+            'status_code' => 200,
         ];
     }
 }

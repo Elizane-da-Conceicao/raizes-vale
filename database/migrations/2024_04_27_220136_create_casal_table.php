@@ -17,7 +17,7 @@ class CreateCasalTable extends Migration
             $table->increments('Casal_id');
             $table->unsignedInteger('Marido_id');
             $table->unsignedInteger('Esposa_id')->nullable();
-            $table->unsignedInteger('Data_casamento')->nullable();
+            $table->date('Data_casamento')->nullable();
             $table->foreign('Marido_id')->references('Pessoa_id')->on('pessoa');
             $table->foreign('Esposa_id')->references('Pessoa_id')->on('pessoa');
         });

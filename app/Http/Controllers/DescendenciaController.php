@@ -19,24 +19,24 @@ class DescendenciaController extends Controller
     public function store(Request $request)
     {
         $retorno = $this->descendenciaService->store($request);
-        return response()->json(['message' => $retorno->message, 'descendencia' => $retorno->descendencia], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Lista descendencias
     public function index()
     {
-        $descendencias = Descendencia::all(); 
+        $arvores = Arvore::all(); 
         return response()->json(['descendencias' => $descendencias], 200);
     }
     //Altera descendencias
     public function update(Request $request, $id)
     {
         $retorno = $this->descendenciaService->update($request);
-        return response()->json(['message' => $retorno->message, 'descendencia' => $retorno->descendencia], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Deleta descendencias
     public function destroy($id)
     {
         $retorno = $this->descendenciaService->delete($request);
-        return response()->json(['message' => $retorno->message, 'descendencia' => $retorno->descendencia], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

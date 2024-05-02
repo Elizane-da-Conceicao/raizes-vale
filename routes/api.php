@@ -9,6 +9,7 @@ use App\Http\Controllers\FamiliaColonizadoraController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DescendenciaController;
 use App\Http\Controllers\CasalController;
+use App\Http\Controllers\ArvoreController;
 
 
 /*
@@ -25,9 +26,6 @@ use App\Http\Controllers\CasalController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-// Route::post('/usuarios', [UsuarioController::class, 'store']);
-// Route::get('/usuarios', [UsuarioController::class, 'index']);
 
 
 Route::prefix('usuarios')->group(function () {
@@ -90,7 +88,7 @@ Route::prefix('descendencias')->group(function () {
 Route::prefix('arvores')->group(function () {
     Route::get('/', [ArvoreController::class, 'index']);
     Route::post('/', [ArvoreController::class, 'store']);
-    Route::get('/{id}', [ArvoreController::class, 'show']);
+    Route::get('/busca/{id}', [ArvoreController::class, 'show']);
     Route::put('/{id}', [ArvoreController::class, 'update']);
     Route::delete('/{id}', [ArvoreController::class, 'destroy']);
 });

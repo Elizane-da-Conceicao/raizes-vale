@@ -20,7 +20,7 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         $retorno = $this->usuarioService->store($request);
-        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Lista Usuarios
     public function index()
@@ -32,18 +32,18 @@ class UsuarioController extends Controller
     public function update(Request $request, $id)
     {
         $retorno = $this->usuarioService->update($request);
-        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Deleta Usuarios
     public function destroy($id)
     {
         $retorno = $this->usuarioService->delete($request);
-        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Logar usuarios
     public function logar(Request $request)
     {
         $retorno = $this->usuarioService->logar($request);
-        return response()->json(['message' => $retorno->message, 'usuario' => $retorno->usuario], $retorno->status_code);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

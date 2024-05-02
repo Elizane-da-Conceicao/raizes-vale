@@ -3,53 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Arvore;
+use App\Services\ArvoreService;
 
 class ArvoreController extends Controller
 {
+    protected $arvoreService;
+
+    public function __construct(ArvoreService $arvoreService)
+    {
+        $this->arvoreService = $arvoreService;
+    }
+    
+    //Grava Arvore
     public function store(Request $request)
     {
-        $arvore = new Arvore();
-        $arvore->descendencia_id = $request->input('descendencia_id');
-        $arvore->familia_id = $request->input('familia_id');
-        $arvore->data_criacao = now();
-        $arvore->data_alteracao = now();
-        $arvore->save();
-
-        return response()->json(['message' => 'Árvore criada com sucesso', 'arvore' => $arvore], 201);
+        $retorno = $this->arvoreService->store($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
-
+    //Lista Arvore
     public function index()
     {
         $arvores = Arvore::all();
         return response()->json(['arvores' => $arvores], 200);
     }
-
+    //Altera Arvore
     public function update(Request $request, $id)
     {
-        $arvore = Arvore::find($id);
-
-        if (!$arvore) {
-            return response()->json(['message' => 'Árvore não encontrada'], 404);
-        }
-
-        $arvore->descendencia_id = $request->input('descendencia_id', $arvore->descendencia_id);
-        $arvore->familia_id = $request->input('familia_id', $arvore->familia_id);
-        $arvore->data_alteracao = now();
-        $arvore->save();
-
-        return response()->json(['message' => 'Árvore atualizada com sucesso', 'arvore' => $arvore], 200);
+        $retorno = $this->arvoreService->update($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
-
+    //Deleta Arvore
     public function destroy($id)
     {
-        $arvore = Arvore::find($id);
-
-        if (!$arvore) {
-            return response()->json(['message' => 'Árvore não encontrada'], 404);
-        }
-
-        $arvore->delete();
-
-        return response()->json(['message' => 'Árvore excluída com sucesso'], 200);
+        $retorno = $this->arvoreService->delete($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //Valida Arvore
+    public function valida($id)
+    {
+        $retorno = $this->arvoreService->delete($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }
