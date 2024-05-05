@@ -24,5 +24,6 @@ class Arvore extends Model
         'Data_alteracao',
         'Validacao',
         'Motivo',
+        'usuario_id',
     ];
 }

@@ -37,11 +37,6 @@ class CasalSolicitacaoService
             ];
         }
 
-        $validacao = '1';
-        if ($usuario->model->administrador === '2') {
-            $validacao = '2';
-        }
-
         $casal = new Casal();
         $casal->Marido_id = $request->input('Marido_id');
         $casal->Esposa_id = $request->input('Esposa_id');

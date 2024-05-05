@@ -26,6 +26,7 @@ class CreatePessoaSolicitacaoTable extends Migration
             $table->string('Resumo')->nullable();
             $table->enum('Validacao', ['1', '2', '3'])->nullable();
             $table->enum('Colonizador', ['1', '2'])->default('2');
+            $table->unsignedBigInteger('usuario_id');
         });
     }
 
