@@ -21,4 +21,14 @@ class Familia extends Model
         'Resumo',
         'Colonizador',
     ];
+
+     public function familiaColonizadora()
+    {
+        return $this->hasOne(FamiliaColonizadora::class, 'Familia_id');
+    }
+
+    public function pessoas()
+    {
+        return $this->belongsToMany(Pessoa::class, 'arvore', 'Familia_id', 'Descendencia_id');
+    }
 }

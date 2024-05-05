@@ -22,4 +22,14 @@ class Arvore extends Model
         'Data_criacao',
         'Data_alteracao',
     ];
+
+    public function descendencia()
+    {
+        return $this->belongsTo(Descendencia::class, 'Descendencia_id');
+    }
+
+    public function familia()
+    {
+        return $this->belongsTo(Familia::class, 'Familia_id');
+    }
 }

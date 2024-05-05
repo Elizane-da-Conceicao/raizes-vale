@@ -24,7 +24,7 @@ class CasalController extends Controller
     //Lista Casal
     public function index()
     {
-        $arvores = Arvore::all();
+        $casais = Casal::all();
         return response()->json(['casais' => $casais], 200);
     }
     //Altera Casal

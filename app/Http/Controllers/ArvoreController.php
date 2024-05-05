@@ -45,4 +45,16 @@ class ArvoreController extends Controller
         $retorno = $this->arvoreService->delete($request);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
+    //Busca Arvore completa a partir de uma familia
+    public function Montar($id)
+    {
+        $retorno = $this->arvoreService->MontaArvore($id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //Busca Arvore a partir de uma pessoa
+    public function MontarArvorePessoa($id)
+    {
+        $retorno = $this->arvoreService->MontaArvorePessoa($id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
 }

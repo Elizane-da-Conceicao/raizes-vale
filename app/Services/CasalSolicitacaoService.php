@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Casal;
 use Illuminate\Http\Request;
 
-class CasalService
+class CasalSolicitacaoService
 {
     protected $pessoaService;
     protected $usuarioService;
@@ -37,19 +37,16 @@ class CasalService
             ];
         }
 
-        // if ($usuario->model->administrador === '2') 
-        // {
-        //     return (object) [
-        //         'message' => 'Solicitacao de Casal criada com sucesso',
-        //         'model' => $arvore,
-        //         'status_code' => 201,
-        //     ];
-        // }
+        $validacao = '1';
+        if ($usuario->model->administrador === '2') {
+            $validacao = '2';
+        }
 
         $casal = new Casal();
         $casal->Marido_id = $request->input('Marido_id');
         $casal->Esposa_id = $request->input('Esposa_id');
         $casal->Data_casamento = $request->input('Data_casamento');
+        $casal->validacao = $validacao; 
         $casal->save();
 
         $marido->Data_casamento = $casal->Data_casamento;

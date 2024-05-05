@@ -24,11 +24,6 @@ class PessoaService
             ];
         }
 
-        $validacao = '1';
-        if ($usuario->model->administrador === '2') {
-            $validacao = '2';
-        }
-
         $pessoa = new Pessoa();
         $pessoa->nome = $request->input('nome');
         $pessoa->sexo = $request->input('sexo');
@@ -37,7 +32,6 @@ class PessoaService
         $pessoa->local_nascimento = $request->input('local_nascimento');
         $pessoa->local_sepultamento = $request->input('local_sepultamento');
         $pessoa->resumo = $request->input('resumo');
-        $pessoa->validacao = $validacao;
         $pessoa->colonizador = $request->input('colonizador', '2');
         $pessoa->save();
 

@@ -24,7 +24,7 @@ class DocumentoController extends Controller
     //Lista documentos
     public function index()
     {
-        $arvores = Arvore::all();
+        $documentos = Documento::all();
         return response()->json(['documentos' => $documentos], 200);
     }
     //Altera documentos

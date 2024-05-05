@@ -24,7 +24,7 @@ class FamiliaColonizadoraController extends Controller
     //Lista familias
     public function index()
     {
-        $arvores = Arvore::all(); 
+        $familiaColonizadoras = FamiliaColonizadora::all(); 
         return response()->json(['familiaColonizadoras' => $familiaColonizadoras], 200);
     }
     //Altera familias

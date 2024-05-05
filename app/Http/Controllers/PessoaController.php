@@ -24,7 +24,7 @@ class PessoaController extends Controller
     //Lista pessoas
     public function index()
     {
-        $arvores = Arvore::all();
+        $pessoas = Pessoa::all();
         return response()->json(['pessoas' => $pessoas], 200);
     }
     //Altera pessoas

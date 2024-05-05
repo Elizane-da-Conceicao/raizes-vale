@@ -24,7 +24,7 @@ class FamiliaController extends Controller
     //Lista familias
     public function index()
     {
-        $arvores = Arvore::all();
+        $familias = Familia::all();
         return response()->json(['familias' => $familias], 200);
     }
     //Altera familias

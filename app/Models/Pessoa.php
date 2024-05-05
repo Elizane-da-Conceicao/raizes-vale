@@ -22,4 +22,19 @@ class Pessoa extends Model
         'Local_sepultamento',
         'Resumo',
     ];
+
+    public function casais()
+    {
+        return $this->hasMany(Casal::class, 'Marido_id');
+    }
+
+    public function esposa()
+    {
+        return $this->belongsTo(Pessoa::class, 'Esposa_id');
+    }
+
+    public function filhos()
+    {
+        return $this->hasManyThrough(Pessoa::class, Descendencia::class, 'Filho_id', 'Pessoa_id');
+    }
 }

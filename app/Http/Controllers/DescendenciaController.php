@@ -24,7 +24,7 @@ class DescendenciaController extends Controller
     //Lista descendencias
     public function index()
     {
-        $arvores = Arvore::all(); 
+        $descendencias = Descendencia::all(); 
         return response()->json(['descendencias' => $descendencias], 200);
     }
     //Altera descendencias

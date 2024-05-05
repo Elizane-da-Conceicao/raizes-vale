@@ -24,18 +24,12 @@ class FamiliaService
             ];
         }
 
-        $validacao = '1';
-        if ($usuario->model->administrador === '2') {
-            $validacao = '2';
-        }
-
         $familia = new Familia();
         $familia->Nome = $request->input('Nome');
         $familia->Data_criacao = $request->input('Data_criacao');
         $familia->Data_alteracao = $request->input('Data_alteracao');
         $familia->Resumo = $request->input('Resumo');
         $familia->Colonizador = $request->input('Colonizador');
-        $familia->Validacao = $validacao;
         $familia->save();
 
         return (object) [

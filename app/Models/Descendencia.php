@@ -19,4 +19,14 @@ class Descendencia extends Model
         'Casal_id',
         'Data_criacao',
     ];
+    
+    public function filho()
+    {
+        return $this->belongsTo(Pessoa::class, 'Filho_id');
+    }
+
+    public function casal()
+    {
+        return $this->belongsTo(Casal::class, 'Casal_id');
+    }
 }

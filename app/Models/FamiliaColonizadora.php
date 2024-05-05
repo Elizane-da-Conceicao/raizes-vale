@@ -22,4 +22,14 @@ class FamiliaColonizadora extends Model
         'Data_chegada',
         'Comentarios',
     ];
+    
+    public function colonizador()
+    {
+        return $this->belongsTo(Pessoa::class, 'Colonizador_id');
+    }
+
+    public function familia()
+    {
+        return $this->belongsTo(Familia::class, 'Familia_id');
+    }
 }

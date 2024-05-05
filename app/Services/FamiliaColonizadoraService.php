@@ -24,17 +24,11 @@ class FamiliaColonizadoraService
             ];
         }
 
-        $validacao = '1';
-        if ($usuario->model->administrador === '2') {
-            $validacao = '2';
-        }
 
         $familiaColonizadora = new FamiliaColonizadora();
         $familiaColonizadora->Colonizador_id = $request->input('Colonizador_id');
         $familiaColonizadora->Familia_id = $request->input('Familia_id');
         $familiaColonizadora->Data_chegada = $request->input('Data_chegada');
-        $familiaColonizadora->Comentarios = $request->input('Comentarios');
-        $familiaColonizadora->validacao = $validacao;
         $familiaColonizadora->save();
 
         return (object) [

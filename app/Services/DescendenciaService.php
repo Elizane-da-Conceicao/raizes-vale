@@ -24,15 +24,9 @@ class DescendenciaService
             ];
         }
 
-        $validacao = '1';
-        if ($usuario->model->administrador === '2') {
-            $validacao = '2';
-        }
-
         $descendencia = new Descendencia(); 
         $descendencia->Filho_id = $request->input('Filho_id');
         $descendencia->Casal_id = $request->input('Casal_id');
-        $descendencia->validacao = $validacao;
         $descendencia->Data_criacao = now();
         $descendencia->save();
 

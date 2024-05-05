@@ -91,4 +91,6 @@ Route::prefix('arvores')->group(function () {
     Route::get('/busca/{id}', [ArvoreController::class, 'show']);
     Route::put('/{id}', [ArvoreController::class, 'update']);
     Route::delete('/{id}', [ArvoreController::class, 'destroy']);
+    Route::get('/montar/{id}', [ArvoreController::class, 'montar']);
+    Route::get('/montar-pessoa/{id}', [ArvoreController::class, 'montarArvorePessoa']);
 });
