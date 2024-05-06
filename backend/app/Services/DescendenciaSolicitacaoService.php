@@ -4,36 +4,16 @@ namespace App\Services;
 use App\Models\Descendencia; 
 use Illuminate\Http\Request;
 
-class DescendenciaService 
+class DescendenciaSolicitacaoService 
 {
-    protected $usuarioService;
-    protected $descendenciaSolictacaoService;
-
-    public function __construct(UsuarioService $usuarioService, DescendenciaSolictacaoService $descendenciaSolictacaoService )
-    {
-        $this->usuarioService = $usuarioService;
-        $this->descendenciaSolictacaoService = $descendenciaSolictacaoService;
-    }
-
     public function store($request)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if (!$usuario->model) {
-            return (object) [
-                'message' => $usuario->message,
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        if ($usuario->model->administrador === '1') 
-        {
-            return $this->descendenciaSolictacaoService->store($request);
-        }
-
-        $descendencia = new Descendencia(); 
+        $descendencia = new DescendenciaSolicitacao(); 
+        $descendencia->Filho_id_solicitacao = $request->input('Filho_id_solicitacao');
+        $descendencia->Casal_id_solicitacao = $request->input('Casal_id_solicitacao');
         $descendencia->Filho_id = $request->input('Filho_id');
         $descendencia->Casal_id = $request->input('Casal_id');
+        $descendencia->usuario_id = $request->input('Usuario_id');
         $descendencia->Data_criacao = now();
         $descendencia->save();
 
@@ -46,13 +26,8 @@ class DescendenciaService
 
     public function update($request, $id)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if ($usuario->model->administrador === '1') 
-        {
-            return $this->descendenciaSolictacaoService->update($request);
-        }
+        $descendencia = DescendenciaSolicitacao::find($id); 
 
-        $descendencia = Descendencia::find($id); 
         if (!$descendencia) {
             return (object) [
                 'message' => 'Descendencia não encontrada', 
@@ -61,6 +36,8 @@ class DescendenciaService
             ];
         }
 
+        $descendencia->Filho_id_solicitacao = $request->input('Filho_id_solicitacao');
+        $descendencia->Casal_id_solicitacao = $request->input('Casal_id_solicitacao');
         $descendencia->Filho_id = $request->input('Filho_id');
         $descendencia->Casal_id = $request->input('Casal_id');
         $descendencia->Data_alteracao = now();
@@ -75,7 +52,7 @@ class DescendenciaService
 
     public function delete($id)
     {
-        $descendencia = Descendencia::find($id);
+        $descendencia = DescendenciaSolicitacao::find($id);
 
         if (!$descendencia) {
             return (object) [

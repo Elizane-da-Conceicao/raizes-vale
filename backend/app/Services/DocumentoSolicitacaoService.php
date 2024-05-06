@@ -7,34 +7,21 @@ use Illuminate\Http\Request;
 class DocumentoService 
 {
     protected $usuarioService;
-    protected $documentoSolicitacaoService;
 
-    public function __construct(UsuarioService $usuarioService, DocumentoSolicitacaoService $documentoSolicitacaoService)
+    public function __construct(UsuarioService $usuarioService)
     {
         $this->usuarioService = $usuarioService;
-        $this->documentoSolicitacaoService = $documentoSolicitacaoService;
     }
 
     public function store($request)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if (!$usuario->model) {
-            return (object) [
-                'message' => $usuario->message,
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        if ($usuario->model->administrador === '1') {
-            $this->documentoSolicitacaoService->store($request);
-        }
-
-        $documento = new Documento(); 
+        $documento = new DocumentoSolicitacao(); 
         $documento->pessoa_id = $request->input('pessoa_id');
+        $documento->pessoa_id_solicitacao = $request->input('pessoa_id_solicitacao');
         $documento->Descricao = $request->input('Descricao');
         $documento->Caminho = $request->input('Caminho');
         $documento->Tipo_arquivo = $request->input('Tipo_arquivo');
+        $documento->validacao = '1';
         $documento->Data_criacao = now();
         $documento->save();
 
@@ -47,13 +34,8 @@ class DocumentoService
 
     public function update($request, $id)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if ($usuario->model->administrador === '1') 
-        {
-            return $this->documentoSolicitacaoService->update($request);
-        }
+        $documento = DocumentoSolicitacao::find($id); 
 
-        $documento = Documento::find($id); 
         if (!$documento) {
             return (object) [
                 'message' => 'Documento não encontrado', 
@@ -63,6 +45,7 @@ class DocumentoService
         }
 
         $documento->pessoa_id = $request->input('pessoa_id');
+        $documento->pessoa_id_solicitacao = $request->input('pessoa_id_solicitacao');
         $documento->Descricao = $request->input('Descricao');
         $documento->Caminho = $request->input('Caminho');
         $documento->Tipo_arquivo = $request->input('Tipo_arquivo');

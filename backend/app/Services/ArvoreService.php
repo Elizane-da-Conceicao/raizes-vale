@@ -13,34 +13,22 @@ use Illuminate\Http\Request;
 class ArvoreService
 {
     protected $usuarioService;
-    protected $casalService;
-    protected $descendenciaService;
-    protected $familiaService;
-    protected $familiaColonizadoraService;
-    protected $pessoaservice;
-    
+    protected $arvoreSolicitacaoService;    
 
     public function __construct(
                                 UsuarioService $usuarioService,
-                                CasalService $casalService,
-                                DescendenciaService $descendenciaService,
-                                FamiliaService $familiaService,
-                                FamiliaColonizadoraService $familiaColonizadoraService,
-                                Pessoaservice $pessoaservice 
+                                ArvoreSolicitacaoService $arvoreSolicitacaoService
                                )
     {
         $this->usuarioService = $usuarioService;
-        $this->casalService = $casalService;
-        $this->descendenciaService = $descendenciaService;
-        $this->familiaService = $familiaService;
-        $this->familiaColonizadoraService = $familiaColonizadoraService;
-        $this->pessoaservice = $pessoaservice;
+        $this->arvoreSolicitacaoService = $arvoreSolicitacaoService;
     }
 
     public function store($request)
     {
         $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
         if (!$usuario->model) {
+
             return (object) [
                 'message' => $usuario->message,
                 'model' => null,
@@ -48,14 +36,11 @@ class ArvoreService
             ];
         }
 
-        // if ($usuario->model->administrador === '1') 
-        // {
-        //     return (object) [
-        //         'message' => 'Solicitacao de Arvore criada com sucesso',
-        //         'model' => $arvore,
-        //         'status_code' => 201,
-        //     ];
-        // }
+        if ($usuario->model->administrador === '1') 
+        {
+            return $this->arvoreSolicitacaoService->store($request);
+        }
+
 
         $arvore = new Arvore();
         $arvore->descendencia_id = $request->input('descendencia_id');
@@ -72,8 +57,13 @@ class ArvoreService
 
     public function update($request, $id)
     {
-        $arvore = Arvore::find($id);
+        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
+        if ($usuario->model->administrador === '1') 
+        {
+            return $this->arvoreSolicitacaoService->update($request);
+        }
 
+        $arvore = Arvore::find($id);
         if (!$arvore) {
             return (object) [
                 'message' => 'Arvore não encontrada.',

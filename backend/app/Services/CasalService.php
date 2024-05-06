@@ -9,11 +9,13 @@ class CasalService
 {
     protected $pessoaService;
     protected $usuarioService;
+    protected $casalSolicitacaoService;
 
-    public function __construct(PessoaService $pessoaService, UsuarioService $usuarioService)
+    public function __construct(PessoaService $pessoaService, UsuarioService $usuarioService, CasalSolicitacaoService $casalSolicitacaoService)
     {
         $this->pessoaService = $pessoaService;
         $this->usuarioService = $usuarioService;
+        $this->casalSolicitacaoService = $casalSolicitacaoService;
     }
 
     public function store($request)
@@ -37,14 +39,10 @@ class CasalService
             ];
         }
 
-        // if ($usuario->model->administrador === '2') 
-        // {
-        //     return (object) [
-        //         'message' => 'Solicitacao de Casal criada com sucesso',
-        //         'model' => $arvore,
-        //         'status_code' => 201,
-        //     ];
-        // }
+        if ($usuario->model->administrador === '1') 
+        {
+            return $this->casalSolicitacaoService->store($request);
+        }
 
         $casal = new Casal();
         $casal->Marido_id = $request->input('Marido_id');
@@ -67,8 +65,13 @@ class CasalService
 
     public function update($request, $id)
     {
+        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
+        if ($usuario->model->administrador === '1') 
+        {
+            return $this->casalSolicitacaoService->update($request);
+        }
+        
         $casal = Casal::find($id);
-
         if (!$casal) {
             return (object) [
                 'message' => 'Casal não encontrado',

@@ -37,7 +37,7 @@ class CasalSolicitacaoService
             ];
         }
 
-        $casal = new Casal();
+        $casal = new CasalSolicitacao();
         $casal->Marido_id = $request->input('Marido_id');
         $casal->Esposa_id = $request->input('Esposa_id');
         $casal->Data_casamento = $request->input('Data_casamento');
@@ -59,7 +59,7 @@ class CasalSolicitacaoService
 
     public function update($request, $id)
     {
-        $casal = Casal::find($id);
+        $casal = CasalSolicitacao::find($id);
 
         if (!$casal) {
             return (object) [

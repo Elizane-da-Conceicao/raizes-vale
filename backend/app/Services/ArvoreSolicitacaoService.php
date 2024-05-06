@@ -16,7 +16,7 @@ class ArvoreSolicitacaoService
 
     public function store($request)
     {
-        $arvore = new Arvore_Solicitacao();
+        $arvore = new ArvoreSolicitacao();
         $arvore->descendencia_id = $request->input('descendencia_id');
         $arvore->familia_id = $request->input('familia_id');
         $arvore->descendencia_id = $request->input('descendencia_id_solicitacao');
@@ -35,21 +35,11 @@ class ArvoreSolicitacaoService
 
     public function update($request, $id)
     {
-        $arvore = Arvore::find($id);
+        $arvore = ArvoreSolicitacao::find($id);
 
         if (!$arvore) {
             return (object) [
                 'message' => 'Arvore não encontrada.',
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        $usuario = $request->input('usuario_id');
-        if($usuario !== $arvore->usuario_id)
-        {
-            return (object) [
-                'message' => 'Usuario não possue permissão para alteração dessa arvore.',
                 'model' => null,
                 'status_code' => 404,
             ];
@@ -88,5 +78,20 @@ class ArvoreSolicitacaoService
             'model' => $arvore,
             'status_code' => 200,
         ];
+    }
+
+    public function valida($request)
+    {
+        if($request->input('validacao') === '2')
+        {
+
+        }
+        if($request->input('validacao') === '3')
+        {
+            $arvore = ArvoreSolicitacao::find($request->input('ArvoreSolicitacao_id'));
+            $arvore->Validacao = '3';
+            $arvore->Motivo = $request->input('Motivo');
+            $arvore->save();
+        }
     }
 }

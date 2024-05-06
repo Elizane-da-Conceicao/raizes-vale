@@ -7,33 +7,22 @@ use Illuminate\Http\Request;
 class FamiliaColonizadoraService
 {
     protected $usuarioService;
-    protected $familiaColonizadoraSolicitacao;
 
-    public function __construct(UsuarioService $usuarioService,FamiliaColonizadoraSolicitacao $familiaColonizadoraSolicitacao)
+    public function __construct(UsuarioService $usuarioService)
     {
         $this->usuarioService = $usuarioService;
-        $this->familiaColonizadoraSolicitacao = $familiaColonizadoraSolicitacao;
     }
 
     public function store($request)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if (!$usuario->model) {
-            return (object) [
-                'message' => $usuario->message,
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        if ($usuario->model->administrador === '1') {
-            $this->familiaColonizadoraSolicitacao->store($request);
-        }
-
-        $familiaColonizadora = new FamiliaColonizadora();
+        $familiaColonizadora = new FamiliaColonizadoraSolicitacao();
         $familiaColonizadora->Colonizador_id = $request->input('Colonizador_id');
         $familiaColonizadora->Familia_id = $request->input('Familia_id');
+        $familiaColonizadora->Colonizador_id_solicitacao = $request->input('Colonizador_id_solicitacao');
+        $familiaColonizadora->Familia_id_solicitacao = $request->input('Familia_id_solicitacao');
         $familiaColonizadora->Data_chegada = $request->input('Data_chegada');
+        $familiaColonizadora->Usuario_id = $request->input('Usuario_id');
+        $familiaColonizadora->Validacao = '1';
         $familiaColonizadora->save();
 
         return (object) [
@@ -45,13 +34,8 @@ class FamiliaColonizadoraService
 
     public function update($request, $id)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if ($usuario->model->administrador === '1') 
-        {
-            return $this->familiaColonizadoraSolicitacao->update($request);
-        }
+        $familiaColonizadora = FamiliaColonizadoraSolicitacao::find($id);
 
-        $familiaColonizadora = FamiliaColonizadora::find($id);
         if (!$familiaColonizadora) {
             return (object) [
                 'message' => 'Familia não encontrado',

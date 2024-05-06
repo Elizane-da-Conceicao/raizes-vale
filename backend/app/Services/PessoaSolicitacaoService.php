@@ -7,30 +7,15 @@ use Illuminate\Http\Request;
 class PessoaService
 {
     protected $usuarioService;
-    protected $pessoaSolicitacaoService;
 
-    public function __construct(UsuarioService $usuarioService, PessoaSolicitacaoService $pessoaSolicitacaoService)
+    public function __construct(UsuarioService $usuarioService)
     {
         $this->usuarioService = $usuarioService;
-        $this->pessoaSolicitacaoService = $pessoaSolicitacaoService;
     }
 
     public function store($request)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if (!$usuario->model) {
-            return (object) [
-                'message' => $usuario->message,
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        if ($usuario->model->administrador === '1') {
-            $this->pessoaSolicitacaoService->store($request);
-        }
-
-        $pessoa = new Pessoa();
+        $pessoa = new PessoaSolicitacao();
         $pessoa->nome = $request->input('nome');
         $pessoa->sexo = $request->input('sexo');
         $pessoa->data_nascimento = $request->input('data_nascimento');
@@ -38,7 +23,8 @@ class PessoaService
         $pessoa->local_nascimento = $request->input('local_nascimento');
         $pessoa->local_sepultamento = $request->input('local_sepultamento');
         $pessoa->resumo = $request->input('resumo');
-        $pessoa->colonizador = $request->input('colonizador', '2');
+        $pessoa->colonizador = $request->input('colonizador');
+        $pessoa->Usuario_id = $request->input('Usuario_id');
         $pessoa->save();
 
         return (object) [
@@ -50,12 +36,8 @@ class PessoaService
 
     public function update($request, $id)
     {
-        $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if ($usuario->model->administrador === '1') {
-            $this->pessoaSolicitacaoService->update($request);
-        }
+        $pessoa = PessoaSolicitacao::find($id);
 
-        $pessoa = Pessoa::find($id);
         if (!$pessoa) {
             return (object) [
                 'message' => 'Pessoa não encontrado',
@@ -72,6 +54,7 @@ class PessoaService
         $pessoa->local_nascimento = $request->input('local_nascimento', $pessoa->local_nascimento);
         $pessoa->local_sepultamento = $request->input('local_sepultamento', $pessoa->local_sepultamento);
         $pessoa->resumo = $request->input('resumo', $pessoa->resumo);
+        $pessoa->validacao = $request->input('validacao', $pessoa->validacao);
         $pessoa->colonizador = $request->input('colonizador', $pessoa->colonizador);
         $pessoa->save();
 
