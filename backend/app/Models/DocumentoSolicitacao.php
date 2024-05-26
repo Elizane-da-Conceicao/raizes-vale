@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class DocumentoSolicitacao extends Model
 {
@@ -15,7 +16,7 @@ class DocumentoSolicitacao extends Model
     protected $primaryKey = 'documento_id_solicitacao';
 
     protected $fillable = [
-        'pessoa_id_solicitacao',
+        'Documento_id',
         'pessoa_id',
         'Descricao',
         'Caminho',

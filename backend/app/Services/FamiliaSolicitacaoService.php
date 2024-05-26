@@ -13,12 +13,12 @@ class FamiliaService
         $this->usuarioService = $usuarioService;
     }
 
-    public function store($request)
+    public function store($request,$id)
     {
         $familia = new FamiliaSolicitacao();
+        $familia->Familia_id = $id;
         $familia->Nome = $request->input('Nome');
-        $familia->Data_criacao = $request->input('Data_criacao');
-        $familia->Data_alteracao = $request->input('Data_alteracao');
+        $familia->Data_criacao = now();
         $familia->Resumo = $request->input('Resumo');
         $familia->Colonizador = $request->input('Colonizador');
         $familia->Validacao = '1';
@@ -29,32 +29,6 @@ class FamiliaService
             'message' => 'Familia criado com sucesso',
             'model' => $familia,
             'status_code' => 201,
-        ];
-    }
-
-    public function update($request, $id)
-    {
-        $familia = FamiliaSolicitacao::find($id);
-
-        if (!$familia) {
-            return (object) [
-                'message' => 'Familia não encontrado',
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-        
-        $familia->Nome = $request->input('Nome');
-        $familia->Data_criacao = $request->input('Data_criacao');
-        $familia->Data_alteracao = $request->input('Data_alteracao');
-        $familia->Resumo = $request->input('Resumo');
-        $familia->Colonizador = $request->input('Colonizador');
-        $familia->save();
-
-        return (object) [
-            'message' => 'Familia atualizado com sucesso',
-            'model' => $familia,
-            'status_code' => 200,
         ];
     }
 

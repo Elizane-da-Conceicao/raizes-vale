@@ -1,51 +1,213 @@
-/* Estilos CSS */
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    background-color: #182811;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+    height: 130vh;
+    margin: 0;
 }
-.container {
-    width: 300px;
-    padding: 20px;
+
+.login-container {
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    right: 2%;
+    bottom: 5%;
     background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 150px;
+    padding-top: 100px;
+    border-radius: 50px;
+    border: 10px solid #769866;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
 }
+
+.ligacoes-container {
+    position: absolute;
+    height: 120vh;
+    top: 5%;
+    left: 2%;
+    right: 2%;
+    bottom: 5%;
+    background-color: #fff;
+    padding: 150px;
+    padding-top: 100px;
+    border-radius: 50px;
+    border: 10px solid #769866;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.formulario{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.input-cadastro{
+    font-weight: bold;
+    width: 350px;
+}
+
+.linha{
+    display: flex;
+    margin-top: 30px;
+}
+
+.centraliza{
+    width: 55%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.direita{
+    width: 55%;
+    display: flex;
+    justify-content: space-around;
+}
+
+#area-texto{
+    width: 765px;
+    height: 120px;
+    border: 2px solid #769866;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+#botoes-centrelizados{
+    padding-top: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#botoes-direita{
+    padding-top: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#input-escrever{
+    width: 900px;
+    height: 450px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+
+#lados{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    height: auto;
+    justify-content: center;
+}
+
+#lado-direito{
+    width: 250px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#relacao{
+    padding: 10px;
+    border: 2px solid #769866;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 250px;
+}
+
+#documento-relacao{
+    width: 300px;
+}
+
+h1 {
+    margin-bottom: 50px;
+    font-weight: bold;
+    width: 50%;
+}
+
+p{
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+#pespecial{
+    margin-right: 5px;
+    color: grey;
+}
+
+.titulos-pagina{
+    color: #4b7c34;
+}
+
 .input-group {
     margin-bottom: 15px;
 }
-.input-group label {
+
+label {
     display: block;
-    margin-bottom: 5px;
     font-weight: bold;
 }
-.input-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-.input-group .show-password {
-    margin-left: 5px;
-    cursor: pointer;
-    color: #007bff;
-}
-.btn {
+
+input {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    border: 2px solid #769866;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: left;
+}
+
+.botoes{
+    width: 280px;
+    padding: 10px;
+    background-color: #dc5318;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    font-weight: bold;
 }
-.btn:hover {
-    background-color: #0056b3;
+
+button {
+    width: 60%;
+    padding: 10px;
+    margin-top: 100px;
+    background-color: #dc5318;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+select{
+    padding: 10px;
+    border: 2px solid #769866;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 100%;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+hr{
+    border: 1px solid #1f5c05;
+    opacity: 0.30;
 }

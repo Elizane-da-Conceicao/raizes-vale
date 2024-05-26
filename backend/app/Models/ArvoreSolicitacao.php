@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ArvoreSolicitacao extends Model
 {
@@ -12,7 +13,7 @@ class ArvoreSolicitacao extends Model
 
     protected $table = 'arvore_solicitacao';
 
-    protected $primaryKey = 'arvore_id_solicitacao'; // Como esta tabela tem uma chave primária composta, não precisamos especificá-la aqui
+    protected $primaryKey = 'arvore_id_solicitacao';
 
 
     protected $fillable = [

@@ -13,11 +13,11 @@ class DocumentoService
         $this->usuarioService = $usuarioService;
     }
 
-    public function store($request)
+    public function store($request,$id)
     {
         $documento = new DocumentoSolicitacao(); 
+        $documento->Documento_id = $id;
         $documento->pessoa_id = $request->input('pessoa_id');
-        $documento->pessoa_id_solicitacao = $request->input('pessoa_id_solicitacao');
         $documento->Descricao = $request->input('Descricao');
         $documento->Caminho = $request->input('Caminho');
         $documento->Tipo_arquivo = $request->input('Tipo_arquivo');
@@ -29,33 +29,6 @@ class DocumentoService
             'message' => 'Documento criado com sucesso', 
             'model' => $documento, 
             'status_code' => 201,
-        ];
-    }
-
-    public function update($request, $id)
-    {
-        $documento = DocumentoSolicitacao::find($id); 
-
-        if (!$documento) {
-            return (object) [
-                'message' => 'Documento não encontrado', 
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        $documento->pessoa_id = $request->input('pessoa_id');
-        $documento->pessoa_id_solicitacao = $request->input('pessoa_id_solicitacao');
-        $documento->Descricao = $request->input('Descricao');
-        $documento->Caminho = $request->input('Caminho');
-        $documento->Tipo_arquivo = $request->input('Tipo_arquivo');
-        $documento->Data_alteracao = now();
-        $documento->save();
-
-        return (object) [
-            'message' => 'Documento atualizado com sucesso',
-            'model' => $documento,
-            'status_code' => 200,
         ];
     }
 

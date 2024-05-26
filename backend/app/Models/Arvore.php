@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Arvore extends Model
 {
@@ -21,15 +22,13 @@ class Arvore extends Model
         'Familia_id',
         'Data_criacao',
         'Data_alteracao',
+        'Validado',
+        'Motivo',
+        'Usuario_id'
     ];
 
-    public function descendencia()
+    public static function obtemArvoreValidacao()
     {
-        return $this->belongsTo(Descendencia::class, 'Descendencia_id');
-    }
-
-    public function familia()
-    {
-        return $this->belongsTo(Familia::class, 'Familia_id');
+        return DB::select('SELECT a.* FROM arvore a join descendencia d on d.Descendencia_id = a.Descendencia_id join familia f on f.Familia_id = a.Familia_id WHERE a.Validado = ? and d.Validado != ? and f.Validado != ? order by a.Data_criacao', ['1','3','3']);
     }
 }

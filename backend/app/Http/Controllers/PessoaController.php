@@ -30,7 +30,7 @@ class PessoaController extends Controller
     //Altera pessoas
     public function update(Request $request, $id)
     {
-        $retorno = $this->pessoaService->update($request);
+        $retorno = $this->pessoaService->update($request, $id);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Deleta pessoas
@@ -43,6 +43,18 @@ class PessoaController extends Controller
     public function show($id)
     {
         $retorno = $this->pessoaService->ObterPessoaporId($id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //Altera create
+    public function validacao(Request $request,$id)
+    {
+        $retorno = $this->pessoaService->validacao($request,$id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //validacao update
+    public function validacaoSolicitacao(Request $request, $id)
+    {
+        $retorno = $this->pessoaService->validacaoSolicitacao($request,$id);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
 }

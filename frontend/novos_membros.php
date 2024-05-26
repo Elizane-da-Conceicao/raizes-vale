@@ -4,9 +4,23 @@ include 'includes/header.php';
  // Carrega o conteúdo dinâmico
 //  include 'includes/content_loader.php';
 ?>
-    <div class="login-container">
+    <div class="ligacoes-container">
         <div class="container">
-        <h1 class="titulos-pagina">Adicionar Colonizador</h1>
+        <h1 class="titulos-pagina">Novas Ligações</h1>
+        <hr>
+        <div class="linha">
+            <p>Você deseja inserir esta igação á qual pessoa?</p>
+            <input type="text" placeholder="Insira o nome ou código" class="input-cadastro">
+        </div>
+        <div class="linha">
+            <p>Qual o relacionamento familiar entre elas?</p>
+            <p id="pespecial">A pessoa atual é</p>
+            <select id="relacao">
+                <option value="Feminino">Cônjuge</option>
+                <option value="Masculino">Filho</option>
+            </select>
+        </div>
+        <hr>
         <form>
             <div id="lados">
                 <div id="input-escrever">
@@ -47,13 +61,16 @@ include 'includes/header.php';
                         <option value="Masculino">Masculino</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="name" class="form-label">Documentos comprobatórios</label>
-                        <input type="button" value="Adicionar Documentos">
-                    </div>
+                    
                 </div>
             </div>
-            <div id="botoes-centrelizados">
+            <hr>
+            <p>Você deve inserir documentos que comprovem a existencia e a relação da pessoa introduzida:</p>
+            <div id="documento-relacao">
+                <label for="name" class="form-label">Documentos comprobatórios</label>
+                <input type="button" value="Adicionar Documentos">
+            </div>
+            <div id="botoes-direita">
                     <div class="centraliza">
                     <input type="button" class="botoes" value="Limpar">
                     <input type="submit" class="botoes" value="Salvar">
@@ -62,35 +79,3 @@ include 'includes/header.php';
         </form>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function() {
-            $('#loginForm').submit(function(event) {
-                event.preventDefault(); // Impede o envio padrão do formulário
-                
-                // Obtenha os valores dos campos de e-mail e senha
-                var email = $('#email').val();
-                var senha = $('#senha').val();
-                var url = '<?php echo $baseAPI ?>usuarios/logar';
-                console.log(url)
-                // Faça a solicitação para a API de login
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        email: email,
-                        senha: senha
-                    }),
-                    success: function(response) {
-                        // Se a resposta for bem-sucedida, redirecione o usuário para a página de início
-                        window.location.href = 'inicio.php';
-                    },
-                    error: function(xhr, status, error) {
-                        // Se houver um erro na resposta, mostre uma mensagem de erro ao usuário
-                        alert('Erro ao fazer login. Verifique suas credenciais e tente novamente.');
-                    }
-                });
-            });
-        });
-    </script>

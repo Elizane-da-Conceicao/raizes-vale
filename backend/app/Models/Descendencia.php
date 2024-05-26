@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Descendencia extends Model
 {
@@ -18,15 +19,13 @@ class Descendencia extends Model
         'Filho_id',
         'Casal_id',
         'Data_criacao',
+        'Validado',
+        'Motivo',
+        'Usuario_id'
     ];
     
-    public function filho()
+    public static function obtemDescendenciaValidacao()
     {
-        return $this->belongsTo(Pessoa::class, 'Filho_id');
-    }
-
-    public function casal()
-    {
-        return $this->belongsTo(Casal::class, 'Casal_id');
+        return DB::select('SELECT d.* FROM descendencia d join pessoa p on p.Pessoa_id = d.Filho_id join casal c on c.Casal_id = d.Casal_id WHERE d.Validado = ? and p.Validado != ? and c.Validado != ? order by c.Data_criacao', ['1','3','3']);
     }
 }

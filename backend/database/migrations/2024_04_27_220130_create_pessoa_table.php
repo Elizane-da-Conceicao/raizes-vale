@@ -24,6 +24,10 @@ class CreatePessoaTable extends Migration
             $table->string('Local_sepultamento', 255)->nullable();
             $table->string('Resumo')->nullable();
             $table->enum('Colonizador', ['1', '2'])->default('2');
+            $table->enum('Validacao', ['1', '2', '3'])->nullable();
+            $table->string('Motivo');
+            $table->date('Data_criacao')->nullable();
+            $table->unsignedBigInteger('usuario_id');
         });
     }
 

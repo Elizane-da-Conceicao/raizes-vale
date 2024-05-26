@@ -33,32 +33,6 @@ class ArvoreSolicitacaoService
         ];
     }
 
-    public function update($request, $id)
-    {
-        $arvore = ArvoreSolicitacao::find($id);
-
-        if (!$arvore) {
-            return (object) [
-                'message' => 'Arvore não encontrada.',
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        $arvore->descendencia_id = $request->input('descendencia_id');
-        $arvore->familia_id = $request->input('familia_id');
-        $arvore->descendencia_id = $request->input('descendencia_id_solicitacao');
-        $arvore->familia_id = $request->input('familia_id_solicitacao');
-        $arvore->data_alteracao = now();
-        $arvore->save();
-
-        return (object) [
-            'message' => 'Arvore atualizado com sucesso',
-            'model' => $arvore,
-            'status_code' => 200,
-        ];
-    }
-
     public function delete($id)
     {
         $arvore = Arvore::find($id);
@@ -84,7 +58,7 @@ class ArvoreSolicitacaoService
     {
         if($request->input('validacao') === '2')
         {
-
+            
         }
         if($request->input('validacao') === '3')
         {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Pessoa extends Model
 {
@@ -20,8 +21,13 @@ class Pessoa extends Model
         'Data_obito',
         'Local_nascimento',
         'Local_sepultamento',
+        'Data_criacao',
+        'Colonizador',
         'Resumo',
+        'Validado',
+        'Motivo',
     ];
+
 
     public function casais()
     {

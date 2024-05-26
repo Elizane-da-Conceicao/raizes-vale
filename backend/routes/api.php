@@ -10,7 +10,7 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DescendenciaController;
 use App\Http\Controllers\CasalController;
 use App\Http\Controllers\ArvoreController;
-
+use App\Http\Controllers\ValidacaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +51,8 @@ Route::prefix('pessoas')->group(function () {
     Route::get('/{id}', [PessoaController::class, 'show']);
     Route::put('/{id}', [PessoaController::class, 'update']);
     Route::delete('/{id}', [PessoaController::class, 'destroy']);
+    Route::put('/validacao/{id}', [PessoaController::class, 'validacao']);
+    Route::put('/validacao/solicitacao/{id}', [PessoaController::class, 'validacaoSolicitacao']);
 });
 
 Route::prefix('familias')->group(function () {
@@ -93,4 +95,12 @@ Route::prefix('arvores')->group(function () {
     Route::delete('/{id}', [ArvoreController::class, 'destroy']);
     Route::get('/montar/{id}', [ArvoreController::class, 'montar']);
     Route::get('/montar-pessoa/{id}', [ArvoreController::class, 'montarArvorePessoa']);
+});
+
+Route::prefix('validacoes')->group(function () {
+    Route::get('/', [ValidacaoController::class, 'index']);
+    Route::post('/', [ValidacaoController::class, 'store']);
+    Route::get('/{id}', [ValidacaoController::class, 'show']);
+    Route::put('/{id}', [ValidacaoController::class, 'update']);
+    Route::delete('/{id}', [ValidacaoController::class, 'destroy']);
 });

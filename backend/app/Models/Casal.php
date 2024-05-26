@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Casal extends Model
 {
@@ -18,20 +19,14 @@ class Casal extends Model
         'Marido_id',
         'Esposa_id',
         'Data_casamento',
+        'Validado',
+        'Data_criacao',
+        'Motivo',
+        'Usuario_id'
     ];
 
-    public function marido()
+    public static function obtemCasalValidacao()
     {
-        return $this->belongsTo(Pessoa::class, 'Marido_id');
-    }
-
-    public function esposa()
-    {
-        return $this->belongsTo(Pessoa::class, 'Esposa_id');
-    }
-
-    public function descendencia()
-    {
-        return $this->hasMany(Descendencia::class, 'Casal_id');
+        return DB::select('SELECT distinct c.* FROM casal c join pessoa p on (p.Pessoa_id = c.Marido_id or p.Pessoa_id = c.Esposa_id) WHERE c.Validado = ? and p.Validado != ? order by c.Data_criacao', ['1','3']);
     }
 }

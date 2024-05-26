@@ -4,18 +4,24 @@ include 'includes/header.php';
  // Carrega o conteúdo dinâmico
 //  include 'includes/content_loader.php';
 ?>
-    <form id="loginForm" class="container mt-5">
-        <h2 class="mb-4">Tela de Login</h2>
-        <div class="form-group">
-            <label for="email">E-mail:</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required>
-        </div>
-        <div class="form-group">
-            <label for="senha">Senha:</label>
-            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Entrar</button>
-    </form>
+    <link rel="stylesheet" type="text/css" href="C:\xampp\htdocs\raizes-vale\raizes-vale\frontend\assets\css\style.css">
+    <div class="login-container">
+        <h1>Bem vindo ao Raízes do Vale</h1>
+        <form action="/submit-login" method="post" class="formulario">
+            <div class="input-group">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="password" placeholder="Senha" required>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Lembrar</label>
+            </div>
+            <button type="submit">Login</button>
+            <p>Já possui uma conta? <a href="/signup">Cadastrar-se</a></p>
+        </form>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

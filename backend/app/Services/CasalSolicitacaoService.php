@@ -57,30 +57,6 @@ class CasalSolicitacaoService
         ];
     }
 
-    public function update($request, $id)
-    {
-        $casal = CasalSolicitacao::find($id);
-
-        if (!$casal) {
-            return (object) [
-                'message' => 'Casal não encontrado',
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        $casal->Marido_id = $request->input('Marido_id', $casal->Marido_id);
-        $casal->Esposa_id = $request->input('Esposa_id', $casal->Esposa_id);
-        $casal->Data_casamento = $request->input('Data_casamento', $casal->Data_casamento);
-        $casal->save();
-
-        return (object) [
-            'message' => 'Casal atualizado com sucesso',
-            'model' => $casal,
-            'status_code' => 200,
-        ];
-    }
-
     public function delete($id)
     {
         $casal = Casal::find($id);

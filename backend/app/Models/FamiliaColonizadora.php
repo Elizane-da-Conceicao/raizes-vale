@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class FamiliaColonizadora extends Model
 {
@@ -21,15 +22,14 @@ class FamiliaColonizadora extends Model
         'Familia_id',
         'Data_chegada',
         'Comentarios',
+        'Validado',
+        'Data_criacao',
+        'Motivo',
+        'Usuario_id'
     ];
     
-    public function colonizador()
+    public static function obtemFamiliaColonizadoraValidacao()
     {
-        return $this->belongsTo(Pessoa::class, 'Colonizador_id');
-    }
-
-    public function familia()
-    {
-        return $this->belongsTo(Familia::class, 'Familia_id');
+        return DB::select('SELECT fc.* FROM familia_colonizadora fc join pessoa p on p.Pessoa_id = fc.Colonizador_id join familia f on f.Familia_id = fc.Familia_id WHERE fc.Validado = ? and p.Validado != ? and f.Validado != ? order by fc.Data_criacao', ['1','3','3']);
     }
 }

@@ -13,13 +13,12 @@ class FamiliaColonizadoraService
         $this->usuarioService = $usuarioService;
     }
 
-    public function store($request)
+    public function store($request,$id )
     {
         $familiaColonizadora = new FamiliaColonizadoraSolicitacao();
+        $familiaColonizadora->Familia_Colonizadora_id = $id; 
         $familiaColonizadora->Colonizador_id = $request->input('Colonizador_id');
         $familiaColonizadora->Familia_id = $request->input('Familia_id');
-        $familiaColonizadora->Colonizador_id_solicitacao = $request->input('Colonizador_id_solicitacao');
-        $familiaColonizadora->Familia_id_solicitacao = $request->input('Familia_id_solicitacao');
         $familiaColonizadora->Data_chegada = $request->input('Data_chegada');
         $familiaColonizadora->Usuario_id = $request->input('Usuario_id');
         $familiaColonizadora->Validacao = '1';
@@ -29,31 +28,6 @@ class FamiliaColonizadoraService
             'message' => 'Familia criado com sucesso',
             'model' => $familiaColonizadora,
             'status_code' => 201,
-        ];
-    }
-
-    public function update($request, $id)
-    {
-        $familiaColonizadora = FamiliaColonizadoraSolicitacao::find($id);
-
-        if (!$familiaColonizadora) {
-            return (object) [
-                'message' => 'Familia não encontrado',
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-        
-        $familiaColonizadora->Colonizador_id = $request->input('Colonizador_id');
-        $familiaColonizadora->Familia_id = $request->input('Familia_id');
-        $familiaColonizadora->Data_chegada = $request->input('Data_chegada');
-        $familiaColonizadora->Comentarios = $request->input('Comentarios');
-        $familiaColonizadora->save();
-
-        return (object) [
-            'message' => 'Familia atualizado com sucesso',
-            'model' => $familiaColonizadora,
-            'status_code' => 200,
         ];
     }
 

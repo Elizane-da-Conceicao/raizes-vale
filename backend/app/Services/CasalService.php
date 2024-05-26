@@ -39,11 +39,6 @@ class CasalService
             ];
         }
 
-        if ($usuario->model->administrador === '1') 
-        {
-            return $this->casalSolicitacaoService->store($request);
-        }
-
         $casal = new Casal();
         $casal->Marido_id = $request->input('Marido_id');
         $casal->Esposa_id = $request->input('Esposa_id');
@@ -80,11 +75,14 @@ class CasalService
             ];
         }
 
-        $casal->Marido_id = $request->input('Marido_id', $casal->Marido_id);
-        $casal->Esposa_id = $request->input('Esposa_id', $casal->Esposa_id);
-        $casal->Data_casamento = $request->input('Data_casamento', $casal->Data_casamento);
-        $casal->save();
+        Casal::where('casal_id', $id)
+        ->update([
+            'Marido_id' => $marido_id,
+            'Esposa_id' => $esposa_id,
+            'Data_casamento' => $data_casamento,
+        ]);
 
+        $casal = Casal::find($id);
         return (object) [
             'message' => 'Casal atualizado com sucesso',
             'model' => $casal,

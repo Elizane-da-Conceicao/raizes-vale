@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CasalSolicitacao extends Model
 {
@@ -21,6 +22,7 @@ class CasalSolicitacao extends Model
         'Esposa_id_solicitacao',
         'Data_casamento',
         'Validacao',
+        'Data_criacao',
         'Motivo',
         'usuario_id',
     ];

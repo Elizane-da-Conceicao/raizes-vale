@@ -9,7 +9,7 @@ class DescendenciaService
     protected $usuarioService;
     protected $descendenciaSolictacaoService;
 
-    public function __construct(UsuarioService $usuarioService, DescendenciaSolictacaoService $descendenciaSolictacaoService )
+    public function __construct(UsuarioService $usuarioService, DescendenciaSolicitacaoService $descendenciaSolictacaoService )
     {
         $this->usuarioService = $usuarioService;
         $this->descendenciaSolictacaoService = $descendenciaSolictacaoService;
@@ -25,12 +25,7 @@ class DescendenciaService
                 'status_code' => 404,
             ];
         }
-
-        if ($usuario->model->administrador === '1') 
-        {
-            return $this->descendenciaSolictacaoService->store($request);
-        }
-
+          
         $descendencia = new Descendencia(); 
         $descendencia->Filho_id = $request->input('Filho_id');
         $descendencia->Casal_id = $request->input('Casal_id');
@@ -61,11 +56,14 @@ class DescendenciaService
             ];
         }
 
-        $descendencia->Filho_id = $request->input('Filho_id');
-        $descendencia->Casal_id = $request->input('Casal_id');
-        $descendencia->Data_alteracao = now();
-        $descendencia->save();
-
+        Descendencia::where('descendencia_id', $id)
+        ->update([
+            'Filho_id' => $filho_id,
+            'Casal_id' => $casal_id,
+            'Data_alteracao' => $data_alteracao,
+        ]);
+        
+        $descendencia = Descendencia::find($id); 
         return (object) [
             'message' => 'Descendencia atualizada com sucesso',
             'model' => $descendencia,

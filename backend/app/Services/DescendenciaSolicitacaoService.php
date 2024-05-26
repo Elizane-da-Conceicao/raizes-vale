@@ -24,32 +24,6 @@ class DescendenciaSolicitacaoService
         ];
     }
 
-    public function update($request, $id)
-    {
-        $descendencia = DescendenciaSolicitacao::find($id); 
-
-        if (!$descendencia) {
-            return (object) [
-                'message' => 'Descendencia não encontrada', 
-                'model' => null,
-                'status_code' => 404,
-            ];
-        }
-
-        $descendencia->Filho_id_solicitacao = $request->input('Filho_id_solicitacao');
-        $descendencia->Casal_id_solicitacao = $request->input('Casal_id_solicitacao');
-        $descendencia->Filho_id = $request->input('Filho_id');
-        $descendencia->Casal_id = $request->input('Casal_id');
-        $descendencia->Data_alteracao = now();
-        $descendencia->save();
-
-        return (object) [
-            'message' => 'Descendencia atualizada com sucesso',
-            'model' => $descendencia,
-            'status_code' => 200,
-        ];
-    }
-
     public function delete($id)
     {
         $descendencia = DescendenciaSolicitacao::find($id);

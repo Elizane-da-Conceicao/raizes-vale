@@ -39,4 +39,16 @@ class FamiliaColonizadoraController extends Controller
         $retorno = $this->familiaColonizadoraService->delete($request);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
+    //Altera create
+    public function validacao(Request $request)
+    {
+        $retorno = $this->familiaColonizadoraService->validacao($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //validacao update
+    public function validacaoSolicitacao(Request $request, $id)
+    {
+        $retorno = $this->familiaColonizadoraService->validacaoSolicitacao($request,$id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
 }

@@ -36,12 +36,6 @@ class ArvoreService
             ];
         }
 
-        if ($usuario->model->administrador === '1') 
-        {
-            return $this->arvoreSolicitacaoService->store($request);
-        }
-
-
         $arvore = new Arvore();
         $arvore->descendencia_id = $request->input('descendencia_id');
         $arvore->familia_id = $request->input('familia_id');
@@ -72,11 +66,14 @@ class ArvoreService
             ];
         }
 
-        $arvore->descendencia_id = $request->input('descendencia_id', $arvore->descendencia_id);
-        $arvore->familia_id = $request->input('familia_id', $arvore->familia_id);
-        $arvore->data_alteracao = now();
-        $arvore->save();
-
+        Arvore::where('arvore_id', $id)
+                ->update([
+                    'descendencia_id' => $descendencia_id,
+                    'familia_id' => $familia_id,
+                    'data_alteracao' => now()
+                ]);
+                
+        $arvore = Arvore::find($id);
         return (object) [
             'message' => 'Casal atualizado com sucesso',
             'model' => $arvore,
@@ -153,25 +150,46 @@ class ArvoreService
     public function PegaPessoaFilho($id,$ramo)
     {
         $pessoa = Pessoa::find($id);
+        if($pessoa)
+        {
+            if($pessoa->Validado !== '2')
+            {
+                $pessoa = null;
+            }
+        }
+
         $conjuge = new Pessoa();
         $arvore = [];
         $filhos = [];
         if ($pessoa) {
             $casal = Casal::where('Marido_id', $pessoa->Pessoa_id)
               ->orWhere('Esposa_id', $pessoa->Pessoa_id)
-              ->first();
-              $ramo = $ramo + 1;
+              ->first(); 
+            $ramo = $ramo + 1;
             if ($casal) {
                 $descendencias = Descendencia::where('Casal_id', $casal->Casal_id)->get();
                 foreach ($descendencias as $desc) {
                     $filho = Pessoa::find($desc->Filho_id);
-    
+                    if($filho)
+                    {
+                        if($filho->Validado !== '2')
+                        {
+                            $filho = null;
+                        }
+                    }
                     if ($filho) {
                         array_push($filhos, $this->PegaPessoaFilho($filho->Pessoa_id,$ramo));
                     }
                 }
                 $idPessoa = $casal->Marido_id == $pessoa->Pessoa_id ? $casal->Esposa_id : $casal->Marido_id;
                 $conjuge = Pessoa::find($idPessoa);
+                if($conjuge)
+                    {
+                        if($conjuge->Validado !== '2')
+                        {
+                            $conjuge = null;
+                        }
+                    }
             }
         }
 

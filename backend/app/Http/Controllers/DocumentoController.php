@@ -39,4 +39,16 @@ class DocumentoController extends Controller
         $retorno = $this->documentoService->delete($request);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
+    //Altera create
+    public function validacao(Request $request)
+    {
+        $retorno = $this->documentoService->validacao($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //validacao update
+    public function validacaoSolicitacao(Request $request, $id)
+    {
+        $retorno = $this->documentoService->validacaoSolicitacao($request,$id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
 }

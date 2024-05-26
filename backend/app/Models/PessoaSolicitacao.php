@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class PessoaSolicitacao extends Model
 {
@@ -13,11 +14,13 @@ class PessoaSolicitacao extends Model
     protected $primaryKey = 'pessoa_id_solicitacao';
 
     protected $fillable = [
+        'Pessoa_id',
         'Nome',
         'Sexo',
         'Data_nascimento',
         'Data_casamento',
         'Data_obito',
+        'Data_criacao',
         'Local_nascimento',
         'Local_sepultamento',
         'Resumo',

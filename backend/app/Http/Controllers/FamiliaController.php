@@ -39,4 +39,16 @@ class FamiliaController extends Controller
         $retorno = $this->familiaService->delete($request);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
+    //Altera create
+    public function validacao(Request $request)
+    {
+        $retorno = $this->familiaService->validacao($request);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+    //validacao update
+    public function validacaoSolicitacao(Request $request, $id)
+    {
+        $retorno = $this->familiaService->validacaoSolicitacao($request,$id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
 }
