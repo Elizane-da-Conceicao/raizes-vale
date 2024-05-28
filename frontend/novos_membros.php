@@ -1,10 +1,11 @@
 <?php
 include 'includes/config.php';
-include 'includes/header.php';
- // Carrega o conteúdo dinâmico
-//  include 'includes/content_loader.php';
 ?>
     <div class="ligacoes-container">
+        <?php
+            include 'includes/header.php';
+        ?>
+    
         <div class="container">
         <h1 class="titulos-pagina">Novas Ligações</h1>
         <hr>

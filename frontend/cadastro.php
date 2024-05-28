@@ -1,10 +1,10 @@
 <?php
 include 'includes/config.php';
-include 'includes/header.php';
- // Carrega o conteúdo dinâmico
-//  include 'includes/content_loader.php';
 ?>
-    <div class="login-container">
+    <div class="container-header">
+    <?php
+    include 'includes/header.php';
+    ?>
         <div class="container">
         <h1 class="titulos-pagina">Adicionar Colonizador</h1>
         <form>
@@ -46,6 +46,7 @@ include 'includes/header.php';
                         <option value="Feminino">Feminino</option>
                         <option value="Masculino">Masculino</option>
                         </select>
+
                     </div>
                     <div>
                         <label for="name" class="form-label">Documentos comprobatórios</label>
