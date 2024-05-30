@@ -45,11 +45,11 @@ class CasalService
         $casal->Data_casamento = $request->input('Data_casamento');
         $casal->save();
 
-        $marido->Data_casamento = $casal->Data_casamento;
-        $esposa->Data_casamento = $casal->Data_casamento;
+        // $marido->Data_casamento = $casal->Data_casamento;
+        // $esposa->Data_casamento = $casal->Data_casamento;
         
-        $retorno = $this->pessoaService->update($marido->model,$marido->model->pessoa_id);
-        $retorno = $this->pessoaService->update($marido->model,$marido->model->pessoa_id);
+        // $retorno = $this->pessoaService->update($marido->model,$marido->model->pessoa_id);
+        // $retorno = $this->pessoaService->update($marido->model,$marido->model->pessoa_id);
 
         return (object) [
             'message' => 'Casal criado com sucesso',

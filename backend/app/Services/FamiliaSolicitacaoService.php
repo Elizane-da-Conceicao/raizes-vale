@@ -4,7 +4,7 @@ namespace App\Services;
 use App\Models\Familia;
 use Illuminate\Http\Request;
 
-class FamiliaService
+class FamiliaSolicitacaoService
 {
     protected $usuarioService;
 

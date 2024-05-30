@@ -45,6 +45,13 @@ class PessoaController extends Controller
         $retorno = $this->pessoaService->ObterPessoaporId($id);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
+    //Obter pessoa por nome
+    public function consultaPessoas($nome)
+    {
+        // return response()->json(['message' => 'deu bom']);
+        $retorno = $this->pessoaService->consultaPessoa($nome);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
     //Altera create
     public function validacao(Request $request,$id)
     {

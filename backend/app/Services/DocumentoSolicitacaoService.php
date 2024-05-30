@@ -4,7 +4,7 @@ namespace App\Services;
 use App\Models\Documento; 
 use Illuminate\Http\Request;
 
-class DocumentoService 
+class DocumentoSolicitacaoService 
 {
     protected $usuarioService;
 

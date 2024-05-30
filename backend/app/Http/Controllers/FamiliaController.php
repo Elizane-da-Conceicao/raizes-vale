@@ -8,6 +8,7 @@ use App\Services\FamiliaService; // Não alterado, presumindo que o serviço ain
 
 class FamiliaController extends Controller
 {
+    
     protected $familiaService;
 
     public function __construct(FamiliaService $familiaService)
@@ -22,7 +23,7 @@ class FamiliaController extends Controller
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Lista familias
-    public function index()
+    public function index() 
     {
         $familias = Familia::all();
         return response()->json(['familias' => $familias], 200);

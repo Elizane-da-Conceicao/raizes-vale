@@ -85,6 +85,16 @@ class PessoaService
         ];
     }
 
+    public function consultaPessoa($nome)
+    {
+        $pessoa = Pessoa::consultaPessoaPorNome($nome);
+        return (object) [
+            'message' => 'Pessoas encontradas com sucesso',
+            'model' => $pessoa,
+            'status_code' => 200,
+        ];
+    }
+
     public function delete($id)
     {
         $pessoa = Pessoa::find($id);

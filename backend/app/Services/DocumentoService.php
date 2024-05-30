@@ -3,6 +3,8 @@
 namespace App\Services;
 use App\Models\Documento; 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentoService 
 {
@@ -17,6 +19,19 @@ class DocumentoService
 
     public function store($request)
     {
+        // Verifique se o arquivo Base64 foi enviado
+        if ($request->filled('arquivo')) {
+            // Decodificar o arquivo Base64
+            $base64File = $request->input('arquivo');
+            $fileData = base64_decode($base64File);
+
+            // Salvar o arquivo em algum local no servidor
+            $hashDocuemnto = Str::random(10);
+            $filename = $hashDocuemnto ; 
+            $path = '/Documentos/'; 
+            Storage::put($path . $filename, $fileData);
+        }
+
         $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
         if (!$usuario->model) {
             return (object) [
@@ -29,7 +44,7 @@ class DocumentoService
         $documento = new Documento(); 
         $documento->pessoa_id = $request->input('pessoa_id');
         $documento->Descricao = $request->input('Descricao');
-        $documento->Caminho = $request->input('Caminho');
+        $documento->Caminho = $path . $filename;
         $documento->Tipo_arquivo = $request->input('Tipo_arquivo');
         $documento->Data_criacao = now();
         $documento->save();
@@ -93,6 +108,22 @@ class DocumentoService
             'model' => $documento,
             'status_code' => 200,
         ];
+    }
+
+    public function buscarArquivosPorPessoa($nomeArquivo)
+    {
+        $arquivos = Storage::files('Documentos');
+        
+        foreach ($arquivos as $arquivo) {
+            if (basename($arquivo) === $nomeArquivo) {
+                $conteudoArquivo = Storage::get($arquivo);
+        
+                $base64Arquivo = base64_encode($conteudoArquivo);
+        
+                echo $base64Arquivo;
+                break;
+            }
+        }
     }
 
     public function Validacao(Request $request,$id)

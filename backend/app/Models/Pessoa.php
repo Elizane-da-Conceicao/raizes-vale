@@ -28,19 +28,10 @@ class Pessoa extends Model
         'Motivo',
     ];
 
-
-    public function casais()
+    public static function consultaPessoaPorNome($nome)
     {
-        return $this->hasMany(Casal::class, 'Marido_id');
+        $nomePesquisa = '%' . $nome . '%';
+        return DB::select('SELECT p.* FROM pessoa p WHERE p.Validado = ?  and LOWER(p.Nome) like LOWER(?) order by p.Data_criacao', ['2', $nomePesquisa]);
     }
 
-    public function esposa()
-    {
-        return $this->belongsTo(Pessoa::class, 'Esposa_id');
-    }
-
-    public function filhos()
-    {
-        return $this->hasManyThrough(Pessoa::class, Descendencia::class, 'Filho_id', 'Pessoa_id');
-    }
 }

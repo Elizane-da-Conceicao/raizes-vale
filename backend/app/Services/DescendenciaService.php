@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\Models\Descendencia; 
+use App\Models\Casal; 
 use Illuminate\Http\Request;
 
 class DescendenciaService 
@@ -17,6 +18,15 @@ class DescendenciaService
 
     public function store($request)
     {
+        $casal = new Casal();
+        if($request->input('Pessoa_id') !== null)
+        {
+            $casal = Casal::where('Marido_id', $request->input('Pessoa_id'))
+            ->orWhere('Esposa_id', $request->input('Pessoa_id'))
+            ->first(); 
+        }
+
+        $request->merge(['Casal_id' => $casal->Casal_id]);
         $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
         if (!$usuario->model) {
             return (object) [

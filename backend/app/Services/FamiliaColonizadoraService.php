@@ -9,7 +9,7 @@ class FamiliaColonizadoraService
     protected $usuarioService;
     protected $familiaColonizadoraSolicitacao;
 
-    public function __construct(UsuarioService $usuarioService,FamiliaColonizadoraSolicitacao $familiaColonizadoraSolicitacao)
+    public function __construct(UsuarioService $usuarioService,FamiliaColonizadoraSolicitacaoservice $familiaColonizadoraSolicitacao)
     {
         $this->usuarioService = $usuarioService;
         $this->familiaColonizadoraSolicitacao = $familiaColonizadoraSolicitacao;

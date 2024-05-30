@@ -96,9 +96,17 @@ body {
     height: 100px;
 }
 
-#area-texto{
+.area-texto{
     width: 765px;
     height: 120px;
+    border: 2px solid #769866;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.area-texto-documento{
+    width: 100%;
+    height: 80px;
     border: 2px solid #769866;
     border-radius: 8px;
     font-weight: bold;
@@ -344,3 +352,72 @@ hr{
 .icon:hover {
     color: #000;
 }
+
+.modal {
+    display: none; /* Esconder o modal por padrão */
+    position: fixed; /* Posição fixa para cobrir a página inteira */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+    z-index: 9999; /* Z-index alto para estar acima de todos os outros elementos */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    width: 50%;
+    height: max-content;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+.header-documento{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.close-button{
+    width: 30px;
+    height: 30px;
+    margin: -15px;
+    display: flex;
+    align-items: center;
+}
+
+.salvar-button{
+    margin: 0px;
+}
+
+.open-modal-btn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-doc-btn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+  }

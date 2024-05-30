@@ -48,11 +48,12 @@ Route::prefix('documentos')->group(function () {
 Route::prefix('pessoas')->group(function () {
     Route::get('/', [PessoaController::class, 'index']);
     Route::post('/', [PessoaController::class, 'store']);
-    Route::get('/{id}', [PessoaController::class, 'show']);
+    Route::get('/pessoa/{id}', [PessoaController::class, 'show']);
     Route::put('/{id}', [PessoaController::class, 'update']);
     Route::delete('/{id}', [PessoaController::class, 'destroy']);
     Route::put('/validacao/{id}', [PessoaController::class, 'validacao']);
     Route::put('/validacao/solicitacao/{id}', [PessoaController::class, 'validacaoSolicitacao']);
+    Route::get('/consulta/{nome}', [PessoaController::class, 'consultaPessoas']);
 });
 
 Route::prefix('familias')->group(function () {

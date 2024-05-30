@@ -4,7 +4,7 @@ namespace App\Services;
 use App\Models\FamiliaColonizadora;
 use Illuminate\Http\Request;
 
-class FamiliaColonizadoraService
+class FamiliaColonizadoraSolicitacaoService
 {
     protected $usuarioService;
 
