@@ -12,9 +12,9 @@ include 'includes/config.php';
             <label for="tipo-arquivo">Escolha o tipo de arquivo</label>
             <select id="tipo-arquivo" name="tipo-arquivo">
                 <option value="" disabled selected>Escolha o tipo</option>
-                <option value="tipo1">Tipo 1</option>
-                <option value="tipo2">Tipo 2</option>
-                <option value="tipo3">Tipo 3</option>
+                <option value="tipo1">png</option>
+                <option value="tipo2">pdf</option>
+                <option value="tipo3">jpg</option>
             </select>
 
             <!-- <label for="titulo">Título</label>
@@ -30,16 +30,12 @@ include 'includes/config.php';
 </body>
 
 <script>
-function abrirModal() {
-  var modal = document.getElementById("myModal");
-  modal.style.display = "flex"; // Mostrar o modal
-}
+// function abrirModal() {
+//   var modal = document.getElementById("myModal");
+//   modal.style.display = "flex"; // Mostrar o modal
+// }
 
-// Função para fechar o modal
-function fecharModal() {
-  var modal = document.getElementById("myModal");
-  modal.style.display = "none"; // Esconder o modal
-}
+
 
 // document.querySelector('.inserir-button').addEventListener('click', async function(event) {
 //           event.preventDefault();

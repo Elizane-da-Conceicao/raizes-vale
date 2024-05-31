@@ -10,49 +10,17 @@ include 'includes/config.php';
         <form>
             <div id="">
                 <input name="nome" id="nome" type="text" placeholder="Pesquise pelo nome" class="input-pesquisa">
-                <input type="text" placeholder="Adicionar pessoa" class="input-pesquisa">
+                <button class="button-adicionar-pessoa" id="addPersonButton">Adicionar pessoa +</button>
             </div>
         <div class="table-container">
             <div class="table-header">
                 <div class="table-cell">Nome</div>
                 <div class="table-cell actions">Ações</div>
             </div>
-            <div class="table-row">
-                <div class="table-cell">Augusto Höfelmann</div>
-                <div class="table-cell actions">
-                <img src="./assets/img/genealogia.jpg" alt="Icone arvore">
-                    <img src="./assets/img/visualizar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lapiseditar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lixeira.jpg" alt="Icone arvore">
-                </div>
+            <div class='linhas'>
+
             </div>
-            <div class="table-row">
-                <div class="table-cell">Henedina Höfelmann</div>
-                <div class="table-cell actions">
-                    <img src="./assets/img/genealogia.jpg" alt="Icone arvore">
-                    <img src="./assets/img/visualizar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lapiseditar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lixeira.jpg" alt="Icone arvore">
-                </div>
-            </div>
-            <div class="table-row">
-                <div class="table-cell">Luiza Höfelmann</div>
-                <div class="table-cell actions">
-                <img src="./assets/img/genealogia.jpg" alt="Icone arvore">
-                    <img src="./assets/img/visualizar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lapiseditar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lixeira.jpg" alt="Icone arvore">
-                </div>
-            </div>
-            <div class="table-row">
-                <div class="table-cell">Nelson Höfelmann</div>
-                <div class="table-cell actions">
-                <img src="./assets/img/genealogia.jpg" alt="Icone arvore">
-                    <img src="./assets/img/visualizar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lapiseditar.jpg" alt="Icone arvore">
-                    <img src="./assets/img/lixeira.jpg" alt="Icone arvore">
-                </div>
-            </div>
+            
         </div>
 
             </div>
@@ -61,27 +29,60 @@ include 'includes/config.php';
     </div>
 
     <script>
+
          document.getElementById('nome').addEventListener('input', async function(event) {
         const nome = event.target.value;
-
+        if (nome.length == 0){
+            const tableContainer = document.querySelector('.linhas');
+            tableContainer.innerHTML = '';     
+        }
         if (nome.length >= 3) { // Fazer a requisição somente se o texto tiver 3 ou mais caracteres
             try {
-                var dataPessoa = {
-                    "nome": nome
-                };
-                const responseFamilia = await fetch('http://127.0.0.1:8000/api/pessoas', {
+                var url = "http://127.0.0.1:8000/api/pessoas/consulta/"+nome;
+                const responsePessoas = await fetch( url, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(dataPessoa),
                 });
                 if (responsePessoas.ok) {
-                    const data = await response.json();
-                    console.log(data);
+                    const data = await responsePessoas.json();
+                    const pessoas = data.model;
                     // Aqui você pode atualizar a UI com os dados recebidos
+                    const tableContainer = document.querySelector('.linhas');
+                    tableContainer.innerHTML = '';
+                    pessoas.forEach(pessoa => {
+                        const tableRow = document.createElement('div');
+                        tableRow.classList.add('table-row');
+        
+                        const nomeCell = document.createElement('div');
+                        nomeCell.classList.add('table-cell');
+                        nomeCell.textContent = pessoa.Nome; 
+        
+                        const actionsCell = document.createElement('div');
+                        actionsCell.classList.add('table-cell', 'actions');
+        
+                        const imgIcons = ['genealogia.jpg', 'visualizar.jpg', 'lapiseditar.jpg', 'lixeira.jpg'];
+                        imgIcons.forEach(icon => {
+                            const img = document.createElement('img');
+                            img.src = `./assets/img/${icon}`;
+                            img.alt = `Icone ${icon.split('.')[0]}`;
+                            if (icon === 'genealogia.jpg') {
+                                img.addEventListener('click', function() {
+                                window.location.href = 'http://localhost/raizes-vale/raizes-vale/frontend/genealogia.php?parametro='+pessoa.Pessoa_id;
+                            });
+                        }
+
+                            actionsCell.appendChild(img);
+                        });
+        
+                        tableRow.appendChild(nomeCell);
+                        tableRow.appendChild(actionsCell);
+                        tableContainer.appendChild(tableRow);
+                    });
                 } else {
-                    console.error('Erro ao buscar dados');
+                    const tableContainer = document.querySelector('.linhas');
+                    tableContainer.innerHTML = '';
                 }
             } catch (error) {
                 console.error('Erro:', error);

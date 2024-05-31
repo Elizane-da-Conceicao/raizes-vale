@@ -86,6 +86,11 @@ function getDocumentos() {
       return JSON.parse(localStorage.getItem('documentos')) || [];
   }
 
+// Função para fechar o modal
+function fecharModal() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none"; // Esconder o modal
+}
   
   function saveDocumento(documento) {
       const documentos = getDocumentos();
@@ -108,14 +113,14 @@ function getDocumentos() {
                   type: tipoArquivo,
                   title: titulo,
                   description: descricao,
-                  file: e.target.result // Armazenar o conteúdo do arquivo como uma URL Base64
+                  file: e.target.result 
               };
 
               saveDocumento(documento);
               alert('Documento salvo com sucesso!');
           };
 
-          reader.readAsDataURL(file); // Ler o arquivo como uma URL Base64
+          reader.readAsDataURL(file); 
       } else {
           alert('Por favor, preencha todos os campos e selecione um arquivo.');
       }
