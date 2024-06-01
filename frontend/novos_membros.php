@@ -104,6 +104,15 @@ include 'includes/config.php';
 
 </body>
 <script>
+function ObterUsuario()
+{
+    let storedUser = localStorage.getItem('usuarioLogado');
+    if (storedUser) {
+      storedUser = JSON.parse(storedUser);
+      return storedUser;
+    }
+}
+
 // Event listener para abrir o modal quando o botão for clicado
 document.querySelector('.open-modal-btn').addEventListener('click', abrirModal);
 
@@ -179,8 +188,8 @@ function fecharModal() {
         const data = Object.fromEntries(formData.entries());
         const relacionamento = document.getElementById('relacao').value;
         data.relacao = relacionamento;
+        var usuarioLogado = ObterUsuario();
         
-        console.log(data);
         var dataPessoa = {
             "nome": data.nome +" "+data.sobrenome,
             "sexo": data.sexo.charAt(0),
@@ -190,8 +199,9 @@ function fecharModal() {
             "local_sepultamento": data.localsepultamento,
             "resumo": data.historiavida,
             "colonizador": '1',
-            "usuario_id": 1
+            "usuario_id": usuarioLogado.idUsuario,
         };
+        console.log(dataPessoa);
         
         try {
             const responsePessoa = await fetch('http://127.0.0.1:8000/api/pessoas', {
@@ -219,7 +229,7 @@ function fecharModal() {
                         "Marido_id": marido,
                         "Esposa_id": esposa,
                         "Data_casamento": "2024-01-01",
-                        "usuario_id": 1
+                        "usuario_id": usuarioLogado.idUsuario,
                     };
 
                     const responseCasal = await fetch('http://127.0.0.1:8000/api/casais', {
@@ -238,7 +248,7 @@ function fecharModal() {
 
                     var dataPessoa = {
                         "Filho_id": result.model.pessoa_id,
-                        "usuario_id": 1,
+                        "usuario_id": usuarioLogado.idUsuario,
                         "Pessoa_id": idPessoa
                     };
 

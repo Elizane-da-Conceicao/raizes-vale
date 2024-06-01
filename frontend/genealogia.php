@@ -31,13 +31,11 @@ async function fetchData() {
       if(responsePessoa.ok)
       {
         const dataPessoa = await responsePessoa.json(); 
-        console.log(dataPessoa);
         if(dataPessoa.model.Colonizador === "1")
         {
             url = "http://127.0.0.1:8000/api/arvores/montar-pessoa/<?php echo($parametro) ?>";
         }
 
-       console.log(url);
        const responseArvore = await fetch(url, {
          method: 'GET',
          headers: {
@@ -47,7 +45,6 @@ async function fetchData() {
  
        if (responseArvore.ok) {
          const data = await responseArvore.json(); 
-         console.log(data);
          var family = new FamilyTree(document.getElementById("tree"), {
            mouseScrool: FamilyTree.action.none,
            nodeBinding: {
@@ -69,7 +66,6 @@ async function fetchData() {
 
 function PercorreArvore(model, pai, mae, nodos)
 {
-    console.log(nodos);
     var idPessoa = model.pessoa.Pessoa_id;
     var nome = model.pessoa.Nome;
     var genero = model.pessoa.Sexo == "F" ? "female" : "male";

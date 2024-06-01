@@ -70,7 +70,16 @@ include 'documento.php';
     ?>
 </body>
 <script>
-// Event listener para abrir o modal quando o botão for clicado
+
+function ObterUsuario()
+{
+    let storedUser = localStorage.getItem('usuarioLogado');
+    if (storedUser) {
+      storedUser = JSON.parse(storedUser);
+      return storedUser;
+    }
+}
+
 document.querySelector('.open-modal-btn').addEventListener('click', abrirModal);
 
 function abrirModal() {
@@ -133,13 +142,14 @@ function fecharModal() {
 
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData);
+        const usuarioLocal = ObterUsuario();
 
         var dataFamilia = {
             "Nome": data.sobrenome,
             "Data_criacao": new Date(),
             "Resumo": "Resumo da família",
             "Colonizador": "2",
-            "usuario_id": 1
+            "usuario_id": usuarioLocal.idUsuario
         };
 
         var dataPessoa = {
@@ -151,7 +161,7 @@ function fecharModal() {
             "local_sepultamento": data.localsepultamento,
             "resumo": data.historiavida,
             "colonizador": '2',
-            "usuario_id": 1
+            "usuario_id": usuarioLocal.idUsuario
         };
 
         console.log(data);
@@ -185,7 +195,7 @@ function fecharModal() {
                         "Familia_id": resultFamilia.model.familia_id,
                         "Data_chegada": "1998-03-02",
                         "Comentarios": data.historiavida,
-                        "usuario_id": 1
+                        "usuario_id": usuarioLocal.idUsuario
                     };
                     console.log(dataFamiliaColonizadora);
                     const responseFamiliaColonizadora = await fetch('http://127.0.0.1:8000/api/familias-colonizadoras', {
@@ -196,52 +206,46 @@ function fecharModal() {
                         body: JSON.stringify(dataFamiliaColonizadora),
                     });
                     if (responseFamiliaColonizadora.ok) {
-                        // const nomesArquivos = Object.keys(localStorage);
-                        // const todosDocumentos = localStorage.getItem('documentos');
-                        // console.log(todosDocumentos);
-
-                        // todosDocumentos.forEach(arquivo => {
-                            // console.log(arquivo);
-                            const todosDocumentos = getDocumentos();
-                    console.log(todosDocumentos);
-
-                    for (const documento of todosDocumentos) {
-                        const { type, description, file } = documento;
-
-                        const arquivoData = {
-                            pessoa_id: resultPessoa.model.pessoa_id,
-                            Descricao: description,
-                            Tipo_arquivo: type,
-                            arquivo: file,
-                            usuario_id: 1
-                        };
-
-                        try {
-                            const response = await fetch('http://127.0.0.1:8000/api/documentos', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(arquivoData),
-                            });
-
-                            if (response.ok) {
-                                console.log(`Arquivo enviado com sucesso.`);
-                            } else {
-                                console.error(`Erro ao enviar o arquivo.`);
+                        const todosDocumentos = getDocumentos();
+                        console.log(todosDocumentos);
+    
+                        for (const documento of todosDocumentos) {
+                            const { type, description, file } = documento;
+    
+                            const arquivoData = {
+                                pessoa_id: resultPessoa.model.pessoa_id,
+                                Descricao: description,
+                                Tipo_arquivo: type,
+                                arquivo: file,
+                                usuario_id: usuarioLocal.idUsuario
+                            };
+    
+                            try {
+                                const response = await fetch('http://127.0.0.1:8000/api/documentos', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(arquivoData),
+                                });
+    
+                                if (response.ok) {
+                                    console.log(`Arquivo enviado com sucesso.`);
+                                } else {
+                                    console.error(`Erro ao enviar o arquivo.`);
+                                }
+                            } catch (error) {
+                                console.error(`Erro ao enviar o arquivo`, error);
                             }
-                        } catch (error) {
-                            console.error(`Erro ao enviar o arquivo`, error);
                         }
-                    }
-
-                    // Limpar localStorage após o envio bem-sucedido
-                    localStorage.removeItem('documentos');
-                            
-
-
-                    document.getElementById('colonizadorForm').reset();
-                    alert('Sucesso ao cadastrar Colonizador');
+    
+                        // Limpar localStorage após o envio bem-sucedido
+                        localStorage.removeItem('documentos');
+                                
+    
+    
+                        document.getElementById('colonizadorForm').reset();
+                        alert('Sucesso ao cadastrar Colonizador');
                     }
                 } else {
                     alert('Erro ao adicionar pessoa.');

@@ -44,8 +44,16 @@ include 'includes/config.php';
     </div>
 </div>
 
-    <script>
+<script>
 
+function ObterUsuario()
+{
+    let storedUser = localStorage.getItem('usuarioLogado');
+    if (storedUser) {
+      storedUser = JSON.parse(storedUser);
+      return storedUser;
+    }
+}
          document.getElementById('nome').addEventListener('input', async function(event) {
             const modal = document.getElementById("infoModal");
             const closeButton = document.getElementsByClassName("close-button")[0];
@@ -88,6 +96,7 @@ include 'includes/config.php';
         
                         const imgIcons = ['genealogia.jpg', 'visualizar.jpg', 'lapiseditar.jpg', 'lixeira.jpg'];
                         imgIcons.forEach(icon => {
+                            const usuario = ObterUsuario();
                             if(icon !== 'lixeira.jpg' ){
                                 const img = document.createElement('img');
                                 img.src = `./assets/img/${icon}`;
@@ -109,7 +118,7 @@ include 'includes/config.php';
                                 }     
     
                                 actionsCell.appendChild(img);
-                            }else if(2 === 2){
+                            }else if(usuario.administrador == 2){
                                 const img = document.createElement('img');
                                 img.src = `./assets/img/${icon}`;
                                 img.alt = `Icone ${icon.split('.')[0]}`;

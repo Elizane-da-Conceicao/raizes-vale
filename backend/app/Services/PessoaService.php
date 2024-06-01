@@ -74,7 +74,6 @@ class PessoaService
             'local_nascimento' => $request->input('local_nascimento'),
             'local_sepultamento' => $request->input('local_sepultamento'),
             'resumo' => $request->input('resumo'),
-            'colonizador' => $request->input('colonizador'),
             'validado' => '2',
         ]);
         $pessoa = Pessoa::find($id);

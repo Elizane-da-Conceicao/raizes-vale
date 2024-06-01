@@ -80,6 +80,15 @@ include 'includes/config.php';
 
 </body>
     <script>
+function ObterUsuario()
+{
+    let storedUser = localStorage.getItem('usuarioLogado');
+    if (storedUser) {
+      storedUser = JSON.parse(storedUser);
+      return storedUser;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async function() {
     CarregaTabela()
 });

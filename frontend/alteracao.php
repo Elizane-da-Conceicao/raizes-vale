@@ -75,7 +75,15 @@ include 'documento.php';
     ?>
 </body>
 <script>
-// Event listener para abrir o modal quando o botão for clicado
+function ObterUsuario()
+{
+    let storedUser = localStorage.getItem('usuarioLogado');
+    if (storedUser) {
+      storedUser = JSON.parse(storedUser);
+      return storedUser;
+    }
+}
+
 document.querySelector('.open-modal-btn').addEventListener('click', abrirModal);
 
 function abrirModal() {
@@ -171,7 +179,7 @@ function fecharModal() {
 
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData);
-
+        var usuariolocal = ObterUsuario();
         var dataPessoa = {
             "nome": data.nome +" " + data.sobrenome,
             "sexo": data.sexo.charAt(0),
@@ -180,11 +188,8 @@ function fecharModal() {
             "local_nascimento": data.localnascimento,
             "local_sepultamento": data.localsepultamento,
             "resumo": data.historiavida,
-            "colonizador": '2',
-            "usuario_id": 2
+            "usuario_id": usuariolocal.idUsuario,
         };
-
-        console.log(dataPessoa);
 
         try {
             const responsePessoa = await fetch('http://127.0.0.1:8000/api/pessoas/<?php echo($parametro) ?>', {
@@ -196,9 +201,7 @@ function fecharModal() {
             });
             if (responsePessoa.ok) {
                 const resultPessoa = await responsePessoa.json();
-                console.log(resultPessoa);
                 const todosDocumentos = getDocumentos();
-                console.log(todosDocumentos);
                 if(todosDocumentos != null)
                 {
                     for (const documento of todosDocumentos) {
