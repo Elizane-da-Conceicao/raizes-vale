@@ -36,7 +36,7 @@ class PessoaController extends Controller
     //Deleta pessoas
     public function destroy($id)
     {
-        $retorno = $this->pessoaService->delete($request);
+        $retorno = $this->pessoaService->delete($id);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
     //Obter pessoa por id

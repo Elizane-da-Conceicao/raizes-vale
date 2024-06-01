@@ -30,32 +30,4 @@ include 'includes/config.php';
 </body>
 
 <script>
-// function abrirModal() {
-//   var modal = document.getElementById("myModal");
-//   modal.style.display = "flex"; // Mostrar o modal
-// }
-
-
-
-// document.querySelector('.inserir-button').addEventListener('click', async function(event) {
-//           event.preventDefault();
-          
-//           const form = document.getElementById('modalForm');
-//           const formData = new FormData(form);
-//           const dataForm = Object.fromEntries(formData);
-//           console.log(dataForm);
-//           try {
-//                   // Adicione o objeto à memória da página
-//                   const documentos = JSON.parse(localStorage.getItem('documentos')) || [];
-//                   documentos.push(dataForm);
-//                   localStorage.setItem('documentos', JSON.stringify(documentos));
-
-//                   alert('Documento salvo com sucesso!');
-//           } catch (error) {
-//               console.error('Erro:', error);
-//               alert('Erro ao salvar o documento.');
-//           }
-//       });
-
-
 </script>

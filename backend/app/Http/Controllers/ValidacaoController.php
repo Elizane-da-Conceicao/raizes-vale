@@ -33,15 +33,6 @@ class ValidacaoController extends Controller
             if($parentesco)
             {
                 array_push($pessoaValidacoes, $parentesco);
-            }else{
-                $pessoaVa = (object) [
-                    'pessoa' => $pessoa,
-                    'mae' => "",
-                    'pai' => "",
-                    'conjuge' => "",
-                    'solicitante' => Usuario::find($pessoa->Usuario_id),
-                ];
-                array_push($pessoaValidacoes, $pessoaVa);
             }
         }
         $pessoasValidacoesSolicitacoes = [];
@@ -50,6 +41,7 @@ class ValidacaoController extends Controller
             $pessoaVaS = (object) [
                 'pessoa' => $pessoaSoli,
                 'solicitante' => Usuario::find($pessoaSoli->Usuario_id),
+                'pessoaOriginal' => $this->pessoaService->Parentesco($pessoaSoli->Pessoa_id)
             ];
             array_push($pessoasValidacoesSolicitacoes, $pessoaVaS);
 

@@ -9,9 +9,9 @@ include 'includes/config.php';
         <div class="container">
         <h1 class="titulos-pagina">Novas Ligações</h1>
         <hr>
-        <div class="linha">
-            <p>Você deseja inserir esta igação á qual pessoa?</p>
-            <input type="text" placeholder="Insira o nome ou código" class="input-cadastro">
+        <div class="linha" id="selected-persons">
+            <p>Você deseja inserir esta ligação á qual pessoa?</p>
+            <input type="button" value="Pesquisar pessoa" class="input-cadastro" id="openModalButton">
         </div>
         <div class="linha">
             <p>Qual o relacionamento familiar entre elas?</p>
@@ -68,7 +68,7 @@ include 'includes/config.php';
             <p>Você deve inserir documentos que comprovem a existência e a relação da pessoa introduzida:</p>
             <div id="documento-relacao">
                 <label for="documentos" class="form-label">Documentos comprobatórios</label>
-                <input type="button" value="Adicionar Documentos">
+                <input type="button" value="Adicionar Documentos" class="open-modal-btn">
             </div>
             <div id="botoes-direita">
                 <div class="centraliza">
@@ -80,11 +80,101 @@ include 'includes/config.php';
 
         </div>
     </div>
+    <?php
+        include 'documento.php';
+    ?>
+ <div id="modal" class="modal-consulta">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h1 class="titulos-pagina">Consultar Pessoas</h1>
+            <form>
+                <div id="">
+                    <input name="nome" id="consulta-nome" type="text" placeholder="Pesquise pelo nome" class="input-pesquisa">
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-cell">Nome</div>
+                    </div>
+                    <div class='linhas'>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <script>
+</body>
+<script>
+// Event listener para abrir o modal quando o botão for clicado
+document.querySelector('.open-modal-btn').addEventListener('click', abrirModal);
+
+function abrirModal() {
+  var modal = document.getElementById("myModal");
+  if (modal) {
+    modal.style.display = "flex"; // Mostrar o modal apenas se for encontrado
+  } else {
+    console.error("Elemento modal não encontrado.");
+  }
+}
+
+function getDocumentos() {
+      return JSON.parse(localStorage.getItem('documentos')) || [];
+  }
+
+// Função para fechar o modal
+function fecharModal() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none"; // Esconder o modal
+}
+  
+  function saveDocumento(documento) {
+      const documentos = getDocumentos();
+      documentos.push(documento);
+      localStorage.setItem('documentos', JSON.stringify(documentos));
+  }
+
+  function salvarDocumento() {
+      const tipoArquivo = document.getElementById('tipo-arquivo').value;
+      const descricao = document.getElementById('descricao').value;
+      const arquivoInput = document.getElementById('documento');
+
+      if (tipoArquivo && descricao && arquivoInput.files.length > 0) {
+          const file = arquivoInput.files[0];
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+              const documento = {
+                  type: tipoArquivo,
+                  description: descricao,
+                  file: e.target.result 
+              };
+
+              saveDocumento(documento);
+              alert('Documento salvo com sucesso!');
+          };
+
+          reader.readAsDataURL(file); 
+      } else {
+          alert('Por favor, preencha todos os campos e selecione um arquivo.');
+      }
+  }
     document.getElementById('pessoaForm').addEventListener('submit', async function(event) {
         event.preventDefault();
-
+        var idPessoa = 0;
+        try {
+            var tagsPessoas = document.getElementsByClassName("person-tag");
+            if(tagsPessoas.length == 0 )
+            {
+                alert('Escolha uma pessoa para inserir a ligação.');
+                return;
+            }
+            for (var i = 0; i < tagsPessoas.length; i++) {
+                var tagPessoa = tagsPessoas[i];
+                idPessoa = tagPessoa.id;
+            }
+            
+        } catch {
+            alert('Escolha uma pessoa para inserir a ligação.');
+        }
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
         const relacionamento = document.getElementById('relacao').value;
@@ -92,7 +182,7 @@ include 'includes/config.php';
         
         console.log(data);
         var dataPessoa = {
-            "nome": data.nome,
+            "nome": data.nome +" "+data.sobrenome,
             "sexo": data.sexo.charAt(0),
             "data_nascimento": data.datanascimento,
             "data_obito": data.datafalecimento,
@@ -119,10 +209,10 @@ include 'includes/config.php';
                     if(data.sexo.charAt(0) == "M")
                     {
                         var marido = result.model.pessoa_id;
-                        var esposa = 9;
+                        var esposa = idPessoa;
                     }else{
                         var esposa = result.model.pessoa_id;
-                        var marido = 9;
+                        var marido = idPessoa;
                     }
                     
                     var dataPessoa = {
@@ -149,7 +239,7 @@ include 'includes/config.php';
                     var dataPessoa = {
                         "Filho_id": result.model.pessoa_id,
                         "usuario_id": 1,
-                        "Pessoa_id": 9
+                        "Pessoa_id": idPessoa
                     };
 
                     const responseFilho = await fetch('http://127.0.0.1:8000/api/descendencias', {
@@ -181,5 +271,102 @@ include 'includes/config.php';
         document.getElementById('colonizadorForm').reset();
         document.getElementById('relacao').selectedIndex = 0;
     });
+    document.addEventListener('DOMContentLoaded', (event) => {
+    const openModalButton = document.getElementById('openModalButton');
+    const modal = document.getElementById('modal');
+    const closeButton = document.querySelector('.close-button');
+    const tableRows = document.querySelectorAll('.table-row');
+    const selectedPersonsContainer = document.getElementById('selected-persons');
+
+    openModalButton.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    closeButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    tableRows.forEach(row => {
+        row.addEventListener('click', () => {
+            const personName = row.querySelector('.table-cell').textContent;
+            comsole.log(personName);
+                addPersonTag(personName);
+            modal.style.display = 'none';
+        });
+    });
+
+    function addPersonTag(name) {
+        const tag = document.createElement('div');
+        tag.classList.add('person-tag');
+        tag.textContent = name;
+        selectedPersonsContainer.appendChild(tag);
+    }
+});
+
+document.getElementById('consulta-nome').addEventListener('input', async function(event) {
+            const nome = event.target.value;
+        if (nome.length == 0){
+            const tableContainer = document.querySelector('.linhas');
+            tableContainer.innerHTML = '';     
+        }
+        if (nome.length >= 3) { // Fazer a requisição somente se o texto tiver 3 ou mais caracteres
+            try {
+                var url = "http://127.0.0.1:8000/api/pessoas/consulta/"+nome;
+                const responsePessoas = await fetch( url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (responsePessoas.ok) {
+                    const data = await responsePessoas.json();
+                    const pessoas = data.model;
+                    // Aqui você pode atualizar a UI com os dados recebidos
+                    const tableContainer = document.querySelector('.linhas');
+                    tableContainer.innerHTML = '';
+                    pessoas.forEach(pessoa => {
+                        const tableRow = document.createElement('div');
+                        tableRow.classList.add('table-row');
+        
+                        const nomeCell = document.createElement('div');
+                        nomeCell.classList.add('table-cell');
+                        nomeCell.textContent = pessoa.pessoa.Nome; 
+                        tableRow.addEventListener('click', () => {
+                            const personName = nomeCell.textContent;
+                                addPersonTag(personName,pessoa.pessoa.Pessoa_id);
+                            modal.style.display = 'none';
+                        });
+
+                        function addPersonTag(name,id) {
+                            const tag = document.createElement('div');
+                            const selectedPersonsContainer = document.getElementById('selected-persons');
+                            tag.classList.add('person-tag');
+                            tag.id = id;
+                            tag.textContent = name;
+                            selectedPersonsContainer.appendChild(tag);
+                        }
+
+                        tableRow.appendChild(nomeCell);
+                        tableContainer.appendChild(tableRow);
+                    });
+
+
+                } else {
+                    const tableContainer = document.querySelector('.linhas');
+                    tableContainer.innerHTML = '';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+    });
+
+
 </script>
 

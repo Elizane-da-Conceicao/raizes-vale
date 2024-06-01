@@ -27,11 +27,35 @@ include 'includes/config.php';
         </form>
         </div>
     </div>
+    <div id="infoModal" class="modal-info-pessoa">
+    <div class="modal-info-content">
+        <span class="close-button">&times;</span>
+        <h3 id="modal-ins-nome"></h3>
+        <h4>Informações Básicas</h4>
+        <p id="modal-ins-nascimento"></p>
+        <p id="modal-ins-morte"></p>
+        <hr>
+        <h4>Família</h4>
+        <p id="modal-ins-casamento"></p>
+        <p id="modal-ins-filhos"></p>
+        <hr>
+        <h4>Historia e Acontecimentos</h4>
+        <p id="modal-ins-resumo"></p>
+    </div>
+</div>
 
     <script>
 
          document.getElementById('nome').addEventListener('input', async function(event) {
-        const nome = event.target.value;
+            const modal = document.getElementById("infoModal");
+            const closeButton = document.getElementsByClassName("close-button")[0];
+            const modalNome = document.getElementById("modal-ins-nome");
+            const modalNascimento = document.getElementById("modal-ins-nascimento");
+            const modalMorte = document.getElementById("modal-ins-morte");
+            const modalCasamento = document.getElementById("modal-ins-casamento");
+            const modalFilhos = document.getElementById("modal-ins-filhos");
+            const modalResumo = document.getElementById("modal-ins-resumo");
+            const nome = event.target.value;
         if (nome.length == 0){
             const tableContainer = document.querySelector('.linhas');
             tableContainer.innerHTML = '';     
@@ -57,29 +81,90 @@ include 'includes/config.php';
         
                         const nomeCell = document.createElement('div');
                         nomeCell.classList.add('table-cell');
-                        nomeCell.textContent = pessoa.Nome; 
+                        nomeCell.textContent = pessoa.pessoa.Nome; 
         
                         const actionsCell = document.createElement('div');
                         actionsCell.classList.add('table-cell', 'actions');
         
                         const imgIcons = ['genealogia.jpg', 'visualizar.jpg', 'lapiseditar.jpg', 'lixeira.jpg'];
                         imgIcons.forEach(icon => {
-                            const img = document.createElement('img');
-                            img.src = `./assets/img/${icon}`;
-                            img.alt = `Icone ${icon.split('.')[0]}`;
-                            if (icon === 'genealogia.jpg') {
-                                img.addEventListener('click', function() {
-                                window.location.href = 'http://localhost/raizes-vale/raizes-vale/frontend/genealogia.php?parametro='+pessoa.Pessoa_id;
-                            });
-                        }
-
-                            actionsCell.appendChild(img);
+                            if(icon !== 'lixeira.jpg' ){
+                                const img = document.createElement('img');
+                                img.src = `./assets/img/${icon}`;
+                                img.alt = `Icone ${icon.split('.')[0]}`;
+                                if (icon === 'genealogia.jpg') {
+                                    img.addEventListener('click', function() {
+                                        window.location.href = 'http://localhost/raizes-vale/raizes-vale/frontend/genealogia.php?parametro='+pessoa.pessoa.Pessoa_id;
+                                    });
+                                }    
+                                if (icon === 'visualizar.jpg') {
+                                    img.addEventListener('click', () => {
+                                        abrirModal(pessoa);
+                                    });
+                                }
+                                if (icon === 'lapiseditar.jpg') {
+                                    img.addEventListener('click', function() {
+                                        window.location.href = 'http://localhost/raizes-vale/raizes-vale/frontend/alteracao.php?parametro='+pessoa.pessoa.Pessoa_id;
+                                    });
+                                }     
+    
+                                actionsCell.appendChild(img);
+                            }else if(2 === 2){
+                                const img = document.createElement('img');
+                                img.src = `./assets/img/${icon}`;
+                                img.alt = `Icone ${icon.split('.')[0]}`;
+                                img.addEventListener('click', () => {
+                                        excluirPessoa(pessoa.pessoa.Pessoa_id);
+                                });
+                                actionsCell.appendChild(img);
+                            }
                         });
         
                         tableRow.appendChild(nomeCell);
                         tableRow.appendChild(actionsCell);
                         tableContainer.appendChild(tableRow);
                     });
+
+                    function abrirModal(pessoa) {
+                        console.log(pessoa);
+                        modalNome.textContent = pessoa.pessoa.Nome;
+                        modalNascimento.textContent = "Nasceu em "+formatarData(pessoa.pessoa.Data_nascimento)+" em "+pessoa.pessoa.Local_nascimento;
+                        modalMorte.textContent = pessoa.pessoa.Data_obito != null ? "Faleceu "+formatarData(pessoa.pessoa.Data_obito) ?? "Data de morte não informada"+ " em "+pessoa.pessoa.Local_sepultamento : null;
+                        modalCasamento.textContent = pessoa.conjuge.Pessoa_id != null || pessoa.conjuge.length > 0 ? "Casou-se em "+( formatarData(pessoa.pessoa.Data_casamento) ?? "Data de casamento não informada")+" com "+pessoa.conjuge.Nome : "Não se casou." ;
+                        modalFilhos.textContent = pessoa.descendentes != null && pessoa.descendentes.length > 0 ? "Tiveram os filhos: "+stringFilhos(pessoa.descendentes) : "Não tiveram filhos.";
+                        modalResumo.textContent = pessoa.pessoa.Resumo;
+                        modal.style.display = "block";
+                    }
+        
+                    function formatarData(dataString) {
+                        // Criar um objeto Date a partir da string de data
+                        const data = new Date(dataString);
+                    
+                        // Array de meses em português
+                        const meses = [
+                            "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                            "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+                        ];
+                    
+                        // Extrair dia, mês e ano do objeto Date
+                        const dia = data.getDate();
+                        const mes = meses[data.getMonth()];
+                        const ano = data.getFullYear();
+                    
+                        // Retornar a data formatada
+                        return `${dia} de ${mes} de ${ano}`;
+                    }
+
+                    function stringFilhos(filhos) 
+                    {
+                        console.log(filhos);
+                        var stringFilhos = "";
+                        filhos.forEach(filho => {
+                            stringFilhos = stringFilhos + filho.Nome+",";
+                        });
+                        return stringFilhos;
+                    }
+
                 } else {
                     const tableContainer = document.querySelector('.linhas');
                     tableContainer.innerHTML = '';
@@ -89,4 +174,20 @@ include 'includes/config.php';
             }
         }
     });
+async function excluirPessoa(id)
+{
+    var url = "http://127.0.0.1:8000/api/pessoas/"+id;
+    const responsePessoas = await fetch( url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if(responsePessoas.ok)
+    {
+        alert(`Pessoa excluida com sucesso`);
+    }
+    const tableContainer = document.querySelector('.linhas');
+    tableContainer.innerHTML = '';
+}
     </script>

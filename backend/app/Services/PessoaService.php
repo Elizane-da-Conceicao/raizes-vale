@@ -64,7 +64,7 @@ class PessoaService
             ];
         }
 
-        Pessoa::where('pessoa_id', $request->input('idPessoa'))
+        Pessoa::where('pessoa_id', $id)
         ->update([
             'nome' => $request->input('nome'),
             'sexo' => $request->input('sexo'),
@@ -77,7 +77,7 @@ class PessoaService
             'colonizador' => $request->input('colonizador'),
             'validado' => '2',
         ]);
-        $pessoa = Pessoa::find($request->input('idPessoa'));
+        $pessoa = Pessoa::find($id);
 
         return (object) [
             'message' => 'Usuário atualizado com sucesso',
@@ -89,9 +89,15 @@ class PessoaService
     public function consultaPessoa($nome)
     {
         $pessoa = Pessoa::consultaPessoaPorNome($nome);
+        $pessoas = [];
+        foreach($pessoa as $p)
+        {
+            array_push($pessoas, $this->Parentesco($p->Pessoa_id));
+
+        }
         return (object) [
             'message' => 'Pessoas encontradas com sucesso',
-            'model' => $pessoa,
+            'model' => $pessoas,
             'status_code' => 200,
         ];
     }
@@ -224,6 +230,7 @@ class PessoaService
         $mae = new Pessoa();
         $pai = new Pessoa();
         $conjuge = new Pessoa();
+        $descendentes = [];
         if($descendencia)
         {
             $casal = Casal::find($descendencia->Casal_id);
@@ -238,11 +245,33 @@ class PessoaService
         if($casal)
         {
             $conjuge = Pessoa::find($casal->Marido_id);
+            $filhos = Descendencia::where('Casal_id', $casal->Casal_id)->get();
+            if($filhos){
+                foreach($filhos as $filho)
+                {
+                    $filhoEntidade = Pessoa::find($filho->Filho_id);
+                    if($filhoEntidade)
+                    {
+                        array_push($descendentes, $filhoEntidade);
+                    }
+                }
+            }
         }else{
             $casal = Casal::where('Marido_id', $id)->first();
             if($casal)
             {
                 $conjuge = Pessoa::find($casal->Esposa_id);
+                $filhos = Descendencia::where('Casal_id',$casal->Casal_id)->get();
+                if($filhos){
+                    foreach($filhos as $filho)
+                    {
+                        $filhoEntidade = Pessoa::find($filho->Filho_id);
+                        if($filhoEntidade)
+                        {
+                            array_push($descendentes, $filhoEntidade);
+                        }
+                    }
+                }
             }
         }
 
@@ -251,6 +280,7 @@ class PessoaService
             'mae' => $mae,
             'pai' => $pai,
             'conjuge' => $conjuge,
+            'descendentes' => $descendentes,
             'solicitante' => Usuario::find($pessoa->Usuario_id),
         ];
 

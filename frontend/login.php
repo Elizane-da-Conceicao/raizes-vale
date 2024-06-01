@@ -4,10 +4,9 @@ include 'includes/header.php';
  // Carrega o conteúdo dinâmico
 //  include 'includes/content_loader.php';
 ?>
-    <link rel="stylesheet" type="text/css" href="C:\xampp\htdocs\raizes-vale\raizes-vale\frontend\assets\css\style.css">
     <div class="login-container">
         <h1>Bem vindo ao Raízes do Vale</h1>
-        <form action="/submit-login" method="post" class="formulario">
+        <form id="loginForm" class="formulario">
             <div class="input-group">
                 <input type="email" id="email" name="email" placeholder="Email" required>
             </div>
@@ -24,37 +23,47 @@ include 'includes/header.php';
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#loginForm').submit(function(event) {
-                event.preventDefault(); // Impede o envio padrão do formulário
-                
-                // Obtenha os valores dos campos de e-mail e senha
-                var email = $('#email').val();
-                var senha = $('#senha').val();
-                var url = '<?php echo $baseAPI ?>usuarios/logar';
-                console.log(url)
-                // Faça a solicitação para a API de login
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        email: email,
-                        senha: senha
-                    }),
-                    success: function(response) {
-                        // Se a resposta for bem-sucedida, redirecione o usuário para a página de início
-                        window.location.href = 'inicio.php';
-                    },
-                    error: function(xhr, status, error) {
-                        // Se houver um erro na resposta, mostre uma mensagem de erro ao usuário
-                        alert('Erro ao fazer login. Verifique suas credenciais e tente novamente.');
-                    }
-                });
-            });
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Impede o envio padrão do formulário
+
+    // Obtém os valores dos campos
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const remember = document.getElementById('remember').checked;
+
+    // Cria o objeto com os dados do formulário
+    const formData = {
+        "email": email,
+        "senha": password
+    };
+
+    try {
+        // Faz a requisição para o backend
+        const response = await fetch('http://127.0.0.1:8000/api/usuarios/logar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
         });
-    </script>
 
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Login realizado com sucesso:', result);
+            var storeUser = {
+                "idUsuario": result.model.usuario_id,
+                "administrador": result.model.administrador 
+            };
+            localStorage.setItem('usuarioLogado', JSON.stringify(storeUser));
+            window.location.href = 'http://localhost/raizes-vale/raizes-vale/frontend/consulta.php';
+        } else {
+            console.error('Erro ao fazer login:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+    }
+});
 
+</script>
 <?php include 'includes/footer.php'; ?>
