@@ -137,7 +137,23 @@ class ArvoreService
 
     public function MontaArvorePessoa($id)
     {
-        $arvoreDescendentes = ArvoreService::PegaPessoaFilho($id,0);
+        $pessoa = Pessoa::find($id);
+        if($pessoa->Colonizador === "1")
+        {
+            $casal = Casal::where('Marido_id', $pessoa->Pessoa_id)
+              ->orWhere('Esposa_id', $pessoa->Pessoa_id)
+              ->first(); 
+            if($casal)
+            {
+                if($casal->Marido_id === $id)
+                {
+                    $id = $casal->Esposa_id;
+                }else{
+                    $id = $casal->Marido_id;
+                }
+            }
+        }
+        $arvoreDescendentes = ArvoreService::PegaPessoaFilho($id, 0);
         $arvorePais =  ArvoreService::PegaPessoaPais($id,0,$arvoreDescendentes);
 
         return (object) [
@@ -206,8 +222,7 @@ class ArvoreService
     public function PegaPessoaPais($id,$ramo,$arvoreFilho)
     {
         $pessoaFilho = Pessoa::find($id);
-        $arvore = [];
-        $arvoreMontada = [];
+        $arvore = (object) [];
         if ($pessoaFilho) {
             $descendencia = Descendencia::where('Filho_id', $pessoaFilho->Pessoa_id)->first();
             $ramo = $ramo + 1;
@@ -218,23 +233,23 @@ class ArvoreService
                   
                 if(ArvoreService::ValidaSePertenceAFamiliaColonizadora($pai->Pessoa_id))
                 {
-                    $arvoreSecao = [
+                    $arvoreSecao = (object) [
                         'ramo' => $ramo,
                         'pessoa' => $pai,
                         'conjuge' => $mae,
-                        'descendentes' => $arvoreFilho,
+                        'descendentes' => [$arvoreFilho],
                     ];
-                    array_push($arvore, $this->PegaPessoaPais($pai->Pessoa_id,$ramo,$arvoreSecao));
+                    $arvore = $this->PegaPessoaPais($pai->Pessoa_id,$ramo,$arvoreSecao);
 
                 }else if (ArvoreService::ValidaSePertenceAFamiliaColonizadora($mae->Pessoa_id))
                 {
-                    $arvoreSecao = [
+                    $arvoreSecao = (object) [
                         'ramo' => $ramo,
                         'pessoa' => $mae,
                         'conjuge' => $pai,
-                        'descendentes' => $arvoreFilho,
+                        'descendentes' => [$arvoreFilho],
                     ];
-                    array_push($arvore , $this->PegaPessoaPais($mae->Pessoa_id,$ramo, $arvoreSecao));
+                    $arvore =$this->PegaPessoaPais($mae->Pessoa_id,$ramo, $arvoreSecao);
                 }                
             }
         }

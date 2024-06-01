@@ -2,6 +2,9 @@
 
 namespace App\Services;
 use App\Models\Pessoa;
+use App\Models\Descendencia;
+use App\Models\Casal;
+use App\Models\Usuario;
 use App\Models\PessoaSolicitacao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,12 +23,9 @@ class PessoaService
     public function store($request)
     {
         $usuario = $this->usuarioService->ObterUsuarioPorId($request->input('usuario_id'));
-        if (!$usuario->model) {
-            return (object) [
-                'message' => $usuario->message,
-                'model' => null,
-                'status_code' => 404,
-            ];
+        $validado = '1';
+        if ($usuario->model->administrador === '2') {
+            $validado = '2';
         }
 
         $pessoa = new Pessoa();
@@ -37,6 +37,7 @@ class PessoaService
         $pessoa->local_sepultamento = $request->input('local_sepultamento');
         $pessoa->resumo = $request->input('resumo');
         $pessoa->colonizador = $request->input('colonizador', '2');
+        $pessoa->Validado = $validado;
         $pessoa->Data_criacao = now();
         $pessoa->save();
 
@@ -215,6 +216,7 @@ class PessoaService
             'status_code' => 200,
         ];
     }
+
     public function Parentesco($id)
     {
         $descendencia = Descendencia::where('Filho_id',$id)->first();
@@ -244,11 +246,14 @@ class PessoaService
             }
         }
 
-        $pessoaParentesto = [
+        $pessoaParentesto = (object) [
             'pessoa' => $pessoa,
             'mae' => $mae,
             'pai' => $pai,
             'conjuge' => $conjuge,
+            'solicitante' => Usuario::find($pessoa->Usuario_id),
         ];
+
+        return $pessoaParentesto;
     }
 }

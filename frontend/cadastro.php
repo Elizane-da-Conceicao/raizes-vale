@@ -100,7 +100,6 @@ function fecharModal() {
 
   function salvarDocumento() {
       const tipoArquivo = document.getElementById('tipo-arquivo').value;
-    //   const titulo = document.getElementById('titulo').value;
       const descricao = document.getElementById('descricao').value;
       const arquivoInput = document.getElementById('documento');
 
@@ -111,7 +110,6 @@ function fecharModal() {
           reader.onload = function(e) {
               const documento = {
                   type: tipoArquivo,
-                  title: titulo,
                   description: descricao,
                   file: e.target.result 
               };
@@ -228,12 +226,12 @@ function fecharModal() {
                             });
 
                             if (response.ok) {
-                                console.log(`Arquivo ${title} enviado com sucesso.`);
+                                console.log(`Arquivo enviado com sucesso.`);
                             } else {
-                                console.error(`Erro ao enviar o arquivo ${title}.`);
+                                console.error(`Erro ao enviar o arquivo.`);
                             }
                         } catch (error) {
-                            console.error(`Erro ao enviar o arquivo ${title}:`, error);
+                            console.error(`Erro ao enviar o arquivo`, error);
                         }
                     }
 
@@ -242,8 +240,8 @@ function fecharModal() {
                             
 
 
-                        document.getElementById('colonizadorForm').reset();
-                        alert('Sucesso ao cadastrar Colonizador');
+                    document.getElementById('colonizadorForm').reset();
+                    alert('Sucesso ao cadastrar Colonizador');
                     }
                 } else {
                     alert('Erro ao adicionar pessoa.');

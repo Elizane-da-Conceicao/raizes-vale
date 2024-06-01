@@ -23,6 +23,7 @@ class Pessoa extends Model
         'Local_sepultamento',
         'Data_criacao',
         'Colonizador',
+        'Usuario_id',
         'Resumo',
         'Validado',
         'Motivo',

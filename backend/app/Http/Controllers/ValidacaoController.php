@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pessoa;
+use App\Models\Usuario;
 use App\Models\PessoaSolicitacao;
 use App\Services\UsuarioService;
 use App\Services\PessoaService;
@@ -28,7 +29,30 @@ class ValidacaoController extends Controller
         $pessoaValidacoes = [];
         foreach($pessoas as $pessoa)
         {
-            array_push($pessoaValidacao, $this->pessoaService->Parentesco($pessoa->Pessoa_id));
+            $parentesco = $this->pessoaService->Parentesco($pessoa->Pessoa_id);
+            if($parentesco)
+            {
+                array_push($pessoaValidacoes, $parentesco);
+            }else{
+                $pessoaVa = (object) [
+                    'pessoa' => $pessoa,
+                    'mae' => "",
+                    'pai' => "",
+                    'conjuge' => "",
+                    'solicitante' => Usuario::find($pessoa->Usuario_id),
+                ];
+                array_push($pessoaValidacoes, $pessoaVa);
+            }
+        }
+        $pessoasValidacoesSolicitacoes = [];
+        foreach($pessoasSolicitacao as $pessoaSoli)
+        {
+            $pessoaVaS = (object) [
+                'pessoa' => $pessoaSoli,
+                'solicitante' => Usuario::find($pessoaSoli->Usuario_id),
+            ];
+            array_push($pessoasValidacoesSolicitacoes, $pessoaVaS);
+
         }
 
         $insertValidacoes = [
@@ -36,7 +60,7 @@ class ValidacaoController extends Controller
         ];
 
         $updateValidacoes = [
-            'pessoas' => $pessoasSolicitacao,
+            'pessoas' => $pessoasValidacoesSolicitacoes,
         ];
 
         return response()->json(['insert' => $insertValidacoes,'update' => $updateValidacoes], 200);

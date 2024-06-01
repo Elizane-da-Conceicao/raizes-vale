@@ -20,15 +20,14 @@ include 'includes/config.php';
 
 async function fetchData() {
     try {
-      var urlPessoa = "http://127.0.0.1:8000/api/pessoas/<?php echo($parametro) ?>";
-      const responsePessoa = await fetch(url, {
+      var urlPessoa = "http://127.0.0.1:8000/api/pessoas/pessoa/<?php echo($parametro) ?>";
+      const responsePessoa = await fetch(urlPessoa, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       });
       var url = "http://127.0.0.1:8000/api/arvores/montar/<?php echo($parametro) ?>";
-      console.log(urlPessoa);
       if(responsePessoa.ok)
       {
         const dataPessoa = await responsePessoa.json(); 
@@ -48,6 +47,7 @@ async function fetchData() {
  
        if (responseArvore.ok) {
          const data = await responseArvore.json(); 
+         console.log(data);
          var family = new FamilyTree(document.getElementById("tree"), {
            mouseScrool: FamilyTree.action.none,
            nodeBinding: {

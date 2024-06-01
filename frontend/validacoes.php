@@ -11,7 +11,7 @@ include 'includes/config.php';
             <div id="">
                 <input type="text" placeholder="Pesquisar" class="input-pesquisa">
 
-                <table>
+                <table id="tabela-validacao">
                 <thead>
                     <tr>
                         <th>Pessoa</th>
@@ -21,46 +21,7 @@ include 'includes/config.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Peter Höfelmann</td>
-                        <td>Elizane da Conceição</td>
-                        <td>Alteração</td>
-                        <td>
-                            <img src="./assets/img/fichavalidacao.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaoaceita.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaonegada.jpg" alt="Icone arvore">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Louise Höfelmann</td>
-                        <td>Elizane da Conceição</td>
-                        <td>Inserção</td>
-                        <td>
-                            <img src="./assets/img/fichavalidacao.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaoaceita.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaonegada.jpg" alt="Icone arvore">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>August Höfelmann</td>
-                        <td>Elizane da Conceição</td>
-                        <td>Inserção</td>
-                        <td>
-                            <img src="./assets/img/fichavalidacao.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaoaceita.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaonegada.jpg" alt="Icone arvore">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Helena Höfelmann</td>
-                        <td>Elizane da Conceição</td>
-                        <td>Alteração</td>
-                        <td>
-                            <img src="./assets/img/fichavalidacao.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaoaceita.jpg" alt="Icone arvore"> 
-                             <img src="./assets/img/validacaonegada.jpg" alt="Icone arvore">
-                        </td>
-                    </tr>
+                    
                 </tbody>
             </table>
 
@@ -70,33 +31,81 @@ include 'includes/config.php';
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#loginForm').submit(function(event) {
-                event.preventDefault(); // Impede o envio padrão do formulário
-                
-                // Obtenha os valores dos campos de e-mail e senha
-                var email = $('#email').val();
-                var senha = $('#senha').val();
-                var url = '<?php echo $baseAPI ?>usuarios/logar';
-                console.log(url)
-                // Faça a solicitação para a API de login
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        email: email,
-                        senha: senha
-                    }),
-                    success: function(response) {
-                        // Se a resposta for bem-sucedida, redirecione o usuário para a página de início
-                        window.location.href = 'inicio.php';
-                    },
-                    error: function(xhr, status, error) {
-                        // Se houver um erro na resposta, mostre uma mensagem de erro ao usuário
-                        alert('Erro ao fazer login. Verifique suas credenciais e tente novamente.');
-                    }
-                });
-            });
+document.addEventListener("DOMContentLoaded", async function() {
+
+    const tabelaValidacao = document.getElementById("tabela-validacao").getElementsByTagName('tbody')[0];
+    try {
+        var urlPessoa = "http://127.0.0.1:8000/api/validacoes";
+        const responsePessoa = await fetch(urlPessoa, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
-    </script>
+
+        if(responsePessoa.ok)
+        {
+            const resultPessoa = await responsePessoa.json();
+            resultPessoa.insert.pessoas.forEach(pessoa => {
+                const linha = document.createElement('tr');
+        
+                const nomeCell = document.createElement('td');
+                nomeCell.textContent = pessoa.pessoa.Nome;
+                linha.appendChild(nomeCell);
+        
+                const responsavelCell = document.createElement('td');
+                responsavelCell.textContent = pessoa.solicitante.Nome;
+                linha.appendChild(responsavelCell);
+        
+                const statusCell = document.createElement('td');
+                statusCell.textContent = "Inserção";
+                linha.appendChild(statusCell);
+        
+                const acoesCell = document.createElement('td');
+                const imgIcons = ['fichavalidacao.jpg', 'validacaoaceita.jpg', 'validacaonegada.jpg'];
+                imgIcons.forEach(icon => {
+                    const img = document.createElement('img');
+                    img.src = `./assets/img/${icon}`;
+                    img.alt = `Icone ${icon.split('.')[0]}`;
+                    acoesCell.appendChild(img);
+                });
+                linha.appendChild(acoesCell);
+        
+                tabelaValidacao.appendChild(linha);
+            });
+            resultPessoa.update.pessoas.forEach(pessoa => {
+                const linha = document.createElement('tr');
+        
+                const nomeCell = document.createElement('td');
+                nomeCell.textContent = pessoa.pessoa.Nome;
+                linha.appendChild(nomeCell);
+        
+                const responsavelCell = document.createElement('td');
+                responsavelCell.textContent = pessoa.solicitante.Nome;
+                linha.appendChild(responsavelCell);
+        
+                const statusCell = document.createElement('td');
+                statusCell.textContent = "Alteração";
+                linha.appendChild(statusCell);
+        
+                const acoesCell = document.createElement('td');
+                const imgIcons = ['fichavalidacao.jpg', 'validacaoaceita.jpg', 'validacaonegada.jpg'];
+                imgIcons.forEach(icon => {
+                    const img = document.createElement('img');
+                    img.src = `./assets/img/${icon}`;
+                    img.alt = `Icone ${icon.split('.')[0]}`;
+                    acoesCell.appendChild(img);
+                });
+                linha.appendChild(acoesCell);
+        
+                tabelaValidacao.appendChild(linha);
+            });
+            
+        } else {
+          console.error("Erro ao buscar dados da árvore:", responseArvore.status);
+        }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+});
+</script>
