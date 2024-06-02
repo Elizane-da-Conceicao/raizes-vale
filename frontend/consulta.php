@@ -8,12 +8,12 @@ include 'includes/config.php';
         <div class="container">
         <h1 class="titulos-pagina">Consultar Pessoas</h1>
         <form>
-            <div id="">
-                <input name="nome" id="nome" type="text" placeholder="Pesquise pelo nome" class="input-pesquisa">
+            <div id="consulta-pessoas">
+                <input name="nome" id="nome" type="text" placeholder="Pesquise pelo nome" class="input-pesquisa-tela">
                 <button class="button-adicionar-pessoa" id="addPersonButton">Adicionar pessoa +</button>
             </div>
         <div class="table-container">
-            <div class="table-header">
+            <div class="table-header-consulta">
                 <div class="table-cell">Nome</div>
                 <div class="table-cell actions">Ações</div>
             </div>
@@ -93,7 +93,6 @@ function ObterUsuario()
         
                         const actionsCell = document.createElement('div');
                         actionsCell.classList.add('table-cell', 'actions');
-        
                         const imgIcons = ['genealogia.jpg', 'visualizar.jpg', 'lapiseditar.jpg', 'lixeira.jpg'];
                         imgIcons.forEach(icon => {
                             const usuario = ObterUsuario();
@@ -198,5 +197,16 @@ async function excluirPessoa(id)
     }
     const tableContainer = document.querySelector('.linhas');
     tableContainer.innerHTML = '';
+
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+      const addPersonButton = document.getElementById('addPersonButton');
+
+      addPersonButton.addEventListener('click', function() {
+        var url = "<?php echo $inserirPessoasLigacoes; ?>";
+        console.log(url);
+        window.location.href = url; 
+      });
+    });
     </script>

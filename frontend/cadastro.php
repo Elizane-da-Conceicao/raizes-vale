@@ -1,6 +1,5 @@
 <?php
 include 'includes/config.php';
-include 'documento.php';
 ?>
     <div class="container-header">
         <?php
@@ -68,6 +67,13 @@ include 'documento.php';
     <?php
         include 'documento.php';
     ?>
+
+<div id="popupOverlay" class="popup-overlay">
+    <div class="popup-content">
+      <h2>Aviso</h2>
+      <p>Para cadastrar uma nova pessoa você deve estar logado.</p>
+      <p> Você será redirecionado para outra página em breve.</p>
+</div>
 </body>
 <script>
 
@@ -78,7 +84,22 @@ function ObterUsuario()
       storedUser = JSON.parse(storedUser);
       return storedUser;
     }
+    return null;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    var usuario = ObterUsuario();
+    if(usuario == null)
+    {
+        const popupOverlay = document.getElementById('popupOverlay');
+    
+        popupOverlay.style.display = 'flex';
+        setTimeout(function() {
+          window.location.href = '<?php echo $cadastroUsuarioURL; ?>'; 
+        }, 10000); 
+    }
+});
 
 document.querySelector('.open-modal-btn').addEventListener('click', abrirModal);
 

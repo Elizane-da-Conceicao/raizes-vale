@@ -18,7 +18,7 @@ include 'includes/header.php';
                 <label for="remember">Lembrar</label>
             </div>
             <button type="submit">Login</button>
-            <p>Já possui uma conta? <a href="/signup">Cadastrar-se</a></p>
+            <p>Já possui uma conta? <a href="<?php echo $cadastroUsuarioURL; ?>">Cadastrar-se</a></p>
         </form>
     </div>
 

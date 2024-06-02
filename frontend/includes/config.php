@@ -2,6 +2,7 @@
 // Configurações de URLs
 $baseURL = "http://localhost/raizes-vale/raizes-vale/frontend/";
 $loginURL = $baseURL . "login.php";
+$cadastroUsuarioURL = $baseURL . "cadastrousuario.php";
 $cadastroURL = $baseURL . "cadastro.php";
 $inicioURL = $baseURL . "inicio.php";
 $inserirPessoasLigacoes = $baseURL . "novos_membros.php";

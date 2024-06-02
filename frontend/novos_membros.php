@@ -9,8 +9,9 @@ include 'includes/config.php';
         <div class="container">
         <h1 class="titulos-pagina">Novas Ligações</h1>
         <hr>
-        <div class="linha" id="selected-persons">
+        <div class="linha" >
             <p>Você deseja inserir esta ligação á qual pessoa?</p>
+            <div id="selected-persons"></div>
             <input type="button" value="Pesquisar pessoa" class="input-cadastro" id="openModalButton">
         </div>
         <div class="linha">
@@ -51,7 +52,7 @@ include 'includes/config.php';
                     </div>
                     <div>
                         <label for="historiavida" class="form-label">História de vida</label>
-                        <textarea id="historiavida" name="historiavida" placeholder="Insira um resumo"></textarea>
+                        <textarea class="area-texto" id="historiavida" name="historiavida" placeholder="Insira um resumo"></textarea>
                     </div>
                 </div>
                 <div id="lado-direito">
@@ -65,7 +66,7 @@ include 'includes/config.php';
                 </div>
             </div>
             <hr>
-            <p>Você deve inserir documentos que comprovem a existência e a relação da pessoa introduzida:</p>
+            <p>Você deve inserir documentos que comprovem a existência e a relação da pessoa:</p>
             <div id="documento-relacao">
                 <label for="documentos" class="form-label">Documentos comprobatórios</label>
                 <input type="button" value="Adicionar Documentos" class="open-modal-btn">
@@ -102,8 +103,15 @@ include 'includes/config.php';
         </div>
     </div>
 
+    <div id="popupOverlay" class="popup-overlay">
+    <div class="popup-content">
+      <h2>Aviso</h2>
+      <p>Para cadastrar uma nova pessoa você deve estar logado.</p>
+      <p> Você será redirecionado para outra página em breve.</p>
+</div>
 </body>
 <script>
+
 function ObterUsuario()
 {
     let storedUser = localStorage.getItem('usuarioLogado');
@@ -111,7 +119,22 @@ function ObterUsuario()
       storedUser = JSON.parse(storedUser);
       return storedUser;
     }
+    return null;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    var usuario = ObterUsuario();
+    if(usuario == null)
+    {
+        const popupOverlay = document.getElementById('popupOverlay');
+    
+        popupOverlay.style.display = 'flex';
+        setTimeout(function() {
+          window.location.href = '<?php echo $cadastroUsuarioURL; ?>'; 
+        }, 10000); 
+    }
+});
 
 // Event listener para abrir o modal quando o botão for clicado
 document.querySelector('.open-modal-btn').addEventListener('click', abrirModal);

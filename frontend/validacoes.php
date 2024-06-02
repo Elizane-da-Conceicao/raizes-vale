@@ -9,7 +9,7 @@ include 'includes/config.php';
         <h1 class="titulos-pagina">Solicitações Pendentes</h1>
         <form>
             <div id="">
-                <input type="text" placeholder="Pesquisar" class="input-pesquisa">
+                <input type="text" placeholder="Pesquisar" class="input-pesquisa-tela">
 
                 <table id="tabela-validacao">
                 <thead>
@@ -30,8 +30,8 @@ include 'includes/config.php';
         </div>
     </div>
 <div id="infoModal" class="modal-info-pessoa">
-    <div class="modal-info-content">
-        <span class="close-button">&times;</span>
+    <div id="modal-info-content" class="modal-info-content">
+        <span class="close-button-vali">&times;</span>
         <h3 id="modal-ins-nome"></h3>
         <h4>Informações Básicas</h4>
         <p id="modal-ins-nascimento"></p>
@@ -46,9 +46,9 @@ include 'includes/config.php';
     </div>
 </div>
 <div id="infoModalSolicitacao" class="modal-info-pessoa-alteracao">
-<div class="modal-info-content-soli">
+<div id="modal-info-content-soli" class="modal-info-content-soli">
     <div class="modal-info-content-atual">
-        <span class="close-button">&times;</span>
+        <h3 id="modal-ins-a">Atual</h3>
         <h3 id="modal-ins-nome-a"></h3>
         <h4>Informações Básicas</h4>
         <p id="modal-ins-nascimento-a"></p>
@@ -62,7 +62,8 @@ include 'includes/config.php';
         <p id="modal-ins-resumo-a"></p>
     </div>
     <div class="modal-info-content-solicitacao">
-        <span class="close-button">&times;</span>
+        <span class="close-button-soli">&times;</span>
+        <h3 id="modal-ins-a">Solicitação</h3>
         <h3 id="modal-ins-nome-s"></h3>
         <h4>Informações Básicas</h4>
         <p id="modal-ins-nascimento-s"></p>
@@ -78,20 +79,42 @@ include 'includes/config.php';
 </div>
 </div>
 
+<div id="popupOverlay" class="popup-overlay">
+    <div class="popup-content">
+      <h2>Aviso</h2>
+      <p>Usuario sem permissão para acessar essa tela.</p>
+      <p> Você será redirecionado para outra página em breve.</p>
+</div>
 </body>
-    <script>
+<script>
+
 function ObterUsuario()
 {
     let storedUser = localStorage.getItem('usuarioLogado');
     if (storedUser) {
       storedUser = JSON.parse(storedUser);
+      console.log(storedUser);
       return storedUser;
     }
+    return null;
 }
 
-document.addEventListener("DOMContentLoaded", async function() {
-    CarregaTabela()
+document.addEventListener('DOMContentLoaded', function() {
+
+    var usuario = ObterUsuario();
+    if(usuario == null || usuario.administrador == 1)
+    {
+        const popupOverlay = document.getElementById('popupOverlay');
+        popupOverlay.style.display = 'flex';
+        setTimeout(function() {
+          window.location.href = '<?php echo $consulta; ?>'; 
+        }, 10000); 
+    }
+    else{
+        CarregaTabela()
+    }
 });
+
 async function CarregaTabela(){
     const tabelaValidacao = document.getElementById("tabela-validacao").getElementsByTagName('tbody')[0];
     tabelaValidacao.innerHTML = ''; 
@@ -147,6 +170,7 @@ async function CarregaTabela(){
                 linha.appendChild(statusCell);
         
                 const acoesCell = document.createElement('td');
+                acoesCell.classList.add('acoes'); 
                 const imgIcons = ['fichavalidacao.jpg', 'validacaoaceita.jpg', 'validacaonegada.jpg'];
                 imgIcons.forEach(icon => {
                     const img = document.createElement('img');
@@ -189,6 +213,7 @@ async function CarregaTabela(){
                 linha.appendChild(statusCell);
         
                 const acoesCell = document.createElement('td');
+                acoesCell.classList.add('acoes'); 
                 const imgIcons = ['fichavalidacao.jpg', 'validacaoaceita.jpg', 'validacaonegada.jpg'];
                 imgIcons.forEach(icon => {
                     const img = document.createElement('img');
@@ -324,5 +349,18 @@ async function validacao(pessoa,tipo,status) {
                 // alert(`Validação aceita para: ${pessoa.nome}`);
             }
     
+document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('infoModalSolicitacao');
+      const modalInsert = document.getElementById('infoModal');
+      const closeButton = document.querySelector('.close-button-vali');
+      const closeButtonSoli = document.querySelector('.close-button-soli');
 
+      closeButton.addEventListener('click', function() {
+        modalInsert.style.display = "none";
+      });
+
+      closeButtonSoli.addEventListener('click', function() {
+        modal.style.display = "none";
+      });
+    });
 </script>

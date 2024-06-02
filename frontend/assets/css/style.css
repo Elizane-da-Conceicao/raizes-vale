@@ -31,23 +31,22 @@ body {
     right: 2%;
     bottom: 5%;
     background-color: #fff;
-    padding-bottom: 150px;
+    padding-bottom: 50px;
     border-radius: 50px;
     border: 10px solid #769866;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
+    height: 100vh;
 }
 
 .ligacoes-container {
     position: absolute;
-    height: 120vh;
+    height: 125vh;
     top: 5%;
     left: 2%;
     right: 2%;
     bottom: 5%;
     background-color: #fff;
-    padding: 150px;
-    padding-top: 100px;
     border-radius: 50px;
     border: 10px solid #769866;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -83,7 +82,7 @@ body {
     justify-content: space-around;
 }
 
-.input-pesquisa{
+.input-pesquisa-tela{
     width: 250px;
 }
 
@@ -319,6 +318,18 @@ hr{
     font-size: 22px;
 }
 
+.table-header-consulta {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    padding-left: 70px;
+    padding-right: 50px;
+    background-color: #dce6da;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    font-size: 22px;
+}
+
 .table-cell {
     flex: 1;
     padding: 10px;
@@ -326,10 +337,47 @@ hr{
     font-size: 20px;
 }
 
+#modal-info-content{
+    background-color: rgb(203 255 199);
+    border: 2px solid #084a08;
+    width: 60%;
+}
+#modal-info-content-soli{
+    padding: 0px;
+}
+
+.modal-info-content-atual{
+    background-color: rgb(255, 199, 199);
+    width: 55%;
+    padding: 20px;
+}
+
+.modal-info-content-solicitacao{
+    background-color: rgb(255, 255, 199);
+    padding: 20px;
+    width: 55%;
+}
+
+#modal-ins-a{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-bottom: 20px;
+}
+
+#modal-ins-nome, #modal-ins-nome-s, #modal-ins-nome-a{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-bottom: 30px;
+}
+
 .table-row {
     display: flex;
     padding-left: 30px;
-    justify-content: space-between;
+    padding-right: 30px;
+    justify-content: space-evenly;
     margin-bottom: 10px;
     border: 2px solid #3b873e;
     border-radius: 10px;
@@ -337,7 +385,7 @@ hr{
 
 .actions {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
     width: 500px;
 }
@@ -388,6 +436,46 @@ hr{
     margin: -15px;
     display: flex;
     align-items: center;
+}
+
+.close-button-vali{
+    width: 30px;
+    height: 30px;
+    margin: -15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    float: right;
+    font-size: 30px;
+    background-color: #aaa;
+    border-radius: 20px;
+    color: white;
+}
+
+.close-button-vali:hover{
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.close-button-soli{
+    width: 30px;
+    height: 30px;
+    margin: -15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    float: right;
+    font-size: 30px;
+    background-color: #aaa;
+    border-radius: 20px;
+    color: white;
+}
+
+.close-button-soli:hover{
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .salvar-button{
@@ -587,7 +675,8 @@ hr{
 
 .actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-evenly;
+    padding-left: 500px;
 }
 
 .linhas {
@@ -598,12 +687,44 @@ hr{
     background-color: #769866;
     border: 2px solid #3b873e;
     color: white;
-    padding: 15px;
+    padding: 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    font-weight: bold;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 10px; 
 }
+
+#consulta-pessoas{
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-overlay {
+    display: none; /* Ocultar o pop-up por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .popup-content {
+    background-color: #b0db9d;
+    border: 2px solid #3b873e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .acoes{
+    display: flex;
+    justify-content: space-evenly;
+  }

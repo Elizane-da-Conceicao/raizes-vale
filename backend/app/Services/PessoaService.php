@@ -38,6 +38,7 @@ class PessoaService
         $pessoa->resumo = $request->input('resumo');
         $pessoa->colonizador = $request->input('colonizador', '2');
         $pessoa->Validado = $validado;
+        $pessoa->Usuario_id = $request->input('usuario_id');
         $pessoa->Data_criacao = now();
         $pessoa->save();
 
@@ -210,7 +211,6 @@ class PessoaService
             'local_nascimento' => $pessoaSolicitacao->Local_nascimento,
             'local_sepultamento' => $pessoaSolicitacao->Local_sepultamento,
             'resumo' => $pessoaSolicitacao->Resumo,
-            'colonizador' => $pessoaSolicitacao->Colonizador,
             'validado' => $request->input('validado'),
             'motivo' => $request->input('motivo')
         ]);

@@ -190,7 +190,7 @@ function fecharModal() {
             "resumo": data.historiavida,
             "usuario_id": usuariolocal.idUsuario,
         };
-
+        
         try {
             const responsePessoa = await fetch('http://127.0.0.1:8000/api/pessoas/<?php echo($parametro) ?>', {
                 method: 'PUT',
@@ -199,6 +199,7 @@ function fecharModal() {
                 },
                 body: JSON.stringify(dataPessoa),
             });
+            console.log(responsePessoa);
             if (responsePessoa.ok) {
                 const resultPessoa = await responsePessoa.json();
                 const todosDocumentos = getDocumentos();
