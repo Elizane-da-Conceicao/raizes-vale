@@ -47,6 +47,12 @@ include 'includes/config.php';
                         <option value="Masculino">Masculino</option>
                         </select>
 
+                        <label id="labelReligiao" for="religiao" class="form-label">Religião</label>
+                        <select id="religiao" name="religiao">
+                            <option value="Catolico">Católico</option>
+                            <option value="Luterano">Luterano</option>
+                        </select>
+
                     </div>
                     <div>
                         <label for="documentos" class="form-label">Documentos comprobatórios</label>
@@ -87,7 +93,57 @@ function ObterUsuario()
     return null;
 }
 
+function transformarData(dataCampo) {
+    if(dataCampo != null)
+    {
+
+        var partesData = dataCampo.split('/');
+        if (partesData.length === 3) {
+            var dia = partesData[0];
+            var mes = partesData[1];
+            var ano = partesData[2];
+        
+            var dataTransformada = ano + '/' + mes + '/' + dia;
+            return dataTransformada;
+        }
+            return null;
+    }
+    return null;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    function aplicarMascaraData(event) {
+        var input = event.target;
+        var value = input.value.replace(/\D/g, '');
+        var formattedValue = '';
+
+        if (value.length > 0) {
+            formattedValue = value.substring(0, 4);
+        }
+        if (value.length > 4) {
+            formattedValue += '/' + value.substring(4, 6);
+        }
+        if (value.length > 6) {
+            formattedValue += '/' + value.substring(6, 8);
+        }
+        
+        input.value = formattedValue;
+    }
+    function permitirSomenteLetras(event) {
+        var input = event.target;
+        input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚâêîôûÂÊÎÔÛãõÃÕçÇäëïöüÄËÏÖÜ ]/g, '');
+    }
+
+    var textoNome = document.getElementById('nome');
+    var textoSobrenome = document.getElementById('sobrenome');
+    textoNome.addEventListener('input', permitirSomenteLetras);
+    textoSobrenome.addEventListener('input', permitirSomenteLetras);
+
+
+    var dataNasc = document.getElementById('datanascimento');
+    var dataFal = document.getElementById('datafalecimento');
+    dataNasc.addEventListener('input', aplicarMascaraData);
+    dataFal.addEventListener('input', aplicarMascaraData);
 
     var usuario = ObterUsuario();
     if(usuario == null)
@@ -132,6 +188,7 @@ function fecharModal() {
       const tipoArquivo = document.getElementById('tipo-arquivo').value;
       const descricao = document.getElementById('descricao').value;
       const arquivoInput = document.getElementById('documento');
+      const privado = document.getElementById('privado').value;
 
       if (tipoArquivo && descricao && arquivoInput.files.length > 0) {
           const file = arquivoInput.files[0];
@@ -141,7 +198,8 @@ function fecharModal() {
               const documento = {
                   type: tipoArquivo,
                   description: descricao,
-                  file: e.target.result 
+                  file: e.target.result,
+                  privado: privado,
               };
 
               saveDocumento(documento);
@@ -176,31 +234,31 @@ function fecharModal() {
         var dataPessoa = {
             "nome": data.nome,
             "sexo": data.sexo.charAt(0),
-            "data_nascimento": data.datanascimento,
-            "data_obito": data.datafalecimento,
+            "data_nascimento": transformarData(data.datanascimento),
+            "data_obito": transformarData(data.datafalecimento),
             "local_nascimento": data.localnascimento,
             "local_sepultamento": data.localsepultamento,
             "resumo": data.historiavida,
             "colonizador": '2',
+            "religiao": data.religiao,
             "usuario_id": usuarioLocal.idUsuario
         };
 
-        console.log(data);
 
         try {
-            const responseFamilia = await fetch('http://127.0.0.1:8000/api/familias', {
+            const responseFamilia = await fetch('<?php echo $baseAPI; ?>familias', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(dataFamilia),
             });
-            console.log(responseFamilia);
+
             if (responseFamilia.ok) {
                 const resultFamilia = await responseFamilia.json();
-                console.log(resultFamilia);
 
-                const responsePessoa = await fetch('http://127.0.0.1:8000/api/pessoas', {
+
+                const responsePessoa = await fetch('<?php echo $baseAPI; ?>pessoas', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -209,8 +267,7 @@ function fecharModal() {
                 });
                 if (responsePessoa.ok) {
                     const resultPessoa = await responsePessoa.json();
-                    console.log(resultPessoa);
-                    console.log(resultFamilia);
+
                     var dataFamiliaColonizadora = {
                         "Colonizador_id": resultPessoa.model.pessoa_id,
                         "Familia_id": resultFamilia.model.familia_id,
@@ -218,8 +275,7 @@ function fecharModal() {
                         "Comentarios": data.historiavida,
                         "usuario_id": usuarioLocal.idUsuario
                     };
-                    console.log(dataFamiliaColonizadora);
-                    const responseFamiliaColonizadora = await fetch('http://127.0.0.1:8000/api/familias-colonizadoras', {
+                    const responseFamiliaColonizadora = await fetch('<?php echo $baseAPI; ?>familias-colonizadoras', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -228,21 +284,21 @@ function fecharModal() {
                     });
                     if (responseFamiliaColonizadora.ok) {
                         const todosDocumentos = getDocumentos();
-                        console.log(todosDocumentos);
     
                         for (const documento of todosDocumentos) {
-                            const { type, description, file } = documento;
+                            const { type, description, file, privado } = documento;
     
                             const arquivoData = {
                                 pessoa_id: resultPessoa.model.pessoa_id,
                                 Descricao: description,
                                 Tipo_arquivo: type,
                                 arquivo: file,
+                                privado: privado == "true" ? 1 : 0,
                                 usuario_id: usuarioLocal.idUsuario
                             };
-    
+                            console.log(arquivoData);
                             try {
-                                const response = await fetch('http://127.0.0.1:8000/api/documentos', {
+                                const response = await fetch('<?php echo $baseAPI; ?>documentos', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',

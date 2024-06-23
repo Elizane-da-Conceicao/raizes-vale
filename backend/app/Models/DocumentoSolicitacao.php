@@ -26,5 +26,6 @@ class DocumentoSolicitacao extends Model
         'Validacao',
         'Motivo',
         'usuario_id',
+        'privado'
     ];
 }

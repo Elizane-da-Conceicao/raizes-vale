@@ -33,6 +33,18 @@ class DocumentoController extends Controller
         $retorno = $this->documentoService->update($request);
         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
     }
+    //Obter documento por idPessoa
+    public function show($id)
+    {
+        $retorno = $this->documentoService->ObterDocumentoPorIdPessoa($id);
+        return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+    }
+     //Obter documento por idPessoa
+     public function solicitacao($id)
+     {
+         $retorno = $this->documentoService->ObterDocumentoPorIdPessoaSolicitacao($id);
+         return response()->json(['message' => $retorno->message, 'model' => $retorno->model], $retorno->status_code);
+     }
     //Deleta documentos
     public function destroy($id)
     {

@@ -40,7 +40,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     try {
         // Faz a requisição para o backend
-        const response = await fetch('http://127.0.0.1:8000/api/usuarios/logar', {
+        const response = await fetch('<?php echo $baseAPI; ?>usuarios/logar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -56,9 +56,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
                 "administrador": result.model.administrador 
             };
             localStorage.setItem('usuarioLogado', JSON.stringify(storeUser));
-            window.location.href = 'http://localhost/raizes-vale/raizes-vale/frontend/consulta.php';
+            window.location.href = '<?php echo $consulta; ?>';
         } else {
-            console.error('Erro ao fazer login:', response.statusText);
+            alert('Email ou senha invalidos.');
         }
     } catch (error) {
         console.error('Erro na requisição:', error);

@@ -41,6 +41,7 @@ Route::prefix('documentos')->group(function () {
     Route::get('/', [DocumentoController::class, 'index']);
     Route::post('/', [DocumentoController::class, 'store']);
     Route::get('/{id}', [DocumentoController::class, 'show']);
+    Route::get('/solicitacao/{id}', [DocumentoController::class, 'solicitacao']);
     Route::put('/{id}', [DocumentoController::class, 'update']);
     Route::delete('/{id}', [DocumentoController::class, 'destroy']);
 });

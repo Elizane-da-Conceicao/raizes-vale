@@ -24,7 +24,8 @@ class Documento extends Model
         'Data_alteracao',
         'Validado',
         'Motivo',
-        'Usuario_id'
+        'Usuario_id',
+        'Privado'
     ];
 
     public static function obtemDocumentoValidacao()

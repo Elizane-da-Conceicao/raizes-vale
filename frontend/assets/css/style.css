@@ -29,14 +29,15 @@ body {
     top: 5%;
     left: 2%;
     right: 2%;
-    bottom: 5%;
     background-color: #fff;
     padding-bottom: 50px;
     border-radius: 50px;
     border: 10px solid #769866;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 800px;
 }
 
 .ligacoes-container {
@@ -182,14 +183,68 @@ th {
 
 }
 
+#fileList, #fileList-a, #fileList-s{
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    font-size: large;
+}
+
+.listaDocumento{
+    color: #000;
+    border-radius: 10px;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #aad098;
+}
+
+#labelReligiao{
+    padding-top: 20px;
+}
+
 tbody tr {
     background-color: #ffffff;
     border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-tr{
-    
+#checkPrivado{
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.close-button-documentos{
+    width: 30px;
+    height: 30px;
+    margin: -15px;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+#textoPrivado{
+    border: 0;
+    margin: 0;
+    padding-left: 5px;
+    font-size: 18px;
+}
+
+#privado{
+    width: auto;
+    padding-right: 5px;
+}
+
+#fileContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+#fileContainer iframe {
+    width: 800px ;
+    height: 1000px ;
 }
 
 tbody tr:hover {
@@ -628,7 +683,7 @@ hr{
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 600px;
+    max-width: 900px;
 }
 
 .close-button {

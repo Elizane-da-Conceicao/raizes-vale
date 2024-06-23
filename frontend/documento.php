@@ -6,7 +6,7 @@ include 'includes/config.php';
   <div class="modal-content">
         <div class="header-documento">
             <h3>Adicione Documentos Comprobatórios</h3>
-            <button class="close-button" onclick="fecharModal()">×</button>
+            <button class="close-button-documentos" onclick="fecharModal()">×</button>
         </div>
         <form id="modalForm">
             <label for="tipo-arquivo">Escolha o tipo de arquivo</label>
@@ -23,11 +23,21 @@ include 'includes/config.php';
             <label for="descricao">Descrição</label>
             <textarea id="descricao" name="descricao" class="area-texto-documento" placeholder="Insira a descrição"></textarea>
             <input type="file" name="documentos[]" class="input-cadastro" id="documento">
+            <label id="checkPrivado">
+                <input type="checkbox" id="privado" name="privado" value="false" onchange="updateCheckboxValue(this)">
+                <span></span> <p id="textoPrivado">Privado</p>
+            </label>
         </form>
         <button class="salvar-button" onclick="salvarDocumento()">Salvar</button>
     </div>
 </div>
 </body>
-
 <script>
+    function updateCheckboxValue(checkbox) {
+    if (checkbox.checked) {
+        checkbox.value = "true";
+    } else {
+        checkbox.value = "false";
+    }
+}
 </script>

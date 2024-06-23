@@ -28,5 +28,6 @@ class PessoaSolicitacao extends Model
         'Colonizador',
         'Motivo',
         'usuario_id',
+        'Religiao'
     ];
 }

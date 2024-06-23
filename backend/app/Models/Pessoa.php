@@ -27,6 +27,7 @@ class Pessoa extends Model
         'Resumo',
         'Validado',
         'Motivo',
+        'Religiao'
     ];
 
     public static function consultaPessoaPorNome($nome)

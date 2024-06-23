@@ -95,7 +95,7 @@ class UsuarioService
         $usuario = Usuario::where('Email', $email)->first();
 
 
-        if ($usuario && $senha = $usuario->senha) {
+        if ($usuario && $senha === $usuario->senha) {
             //Usar futuramente
             //$request->session()->put('usuario_id', $usuario->id);
             return (object) [

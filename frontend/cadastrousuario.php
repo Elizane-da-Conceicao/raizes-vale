@@ -100,7 +100,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
             console.log(dataUsuario);
 
             try {
-                const responseUsuario = await fetch('http://127.0.0.1:8000/api/usuarios', {
+                const responseUsuario = await fetch('<?php echo $baseAPI; ?>usuarios', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

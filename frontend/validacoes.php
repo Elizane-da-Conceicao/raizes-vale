@@ -33,6 +33,7 @@ include 'includes/config.php';
     <div id="modal-info-content" class="modal-info-content">
         <span class="close-button-vali">&times;</span>
         <h3 id="modal-ins-nome"></h3>
+        <p id="modal-ins-religiao"></p>
         <h4>Informações Básicas</h4>
         <p id="modal-ins-nascimento"></p>
         <p id="modal-ins-morte"></p>
@@ -43,6 +44,8 @@ include 'includes/config.php';
         <hr>
         <h4>Historia e Acontecimentos</h4>
         <p id="modal-ins-resumo"></p>
+        <h4>Documentos:</h4>
+        <ul id="fileList"></ul>
     </div>
 </div>
 <div id="infoModalSolicitacao" class="modal-info-pessoa-alteracao">
@@ -50,6 +53,7 @@ include 'includes/config.php';
     <div class="modal-info-content-atual">
         <h3 id="modal-ins-a">Atual</h3>
         <h3 id="modal-ins-nome-a"></h3>
+        <p id="modal-ins-religiao-a"></p>
         <h4>Informações Básicas</h4>
         <p id="modal-ins-nascimento-a"></p>
         <p id="modal-ins-morte-a"></p>
@@ -60,11 +64,14 @@ include 'includes/config.php';
         <hr>
         <h4>Historia e Acontecimentos</h4>
         <p id="modal-ins-resumo-a"></p>
+        <h4>Documentos:</h4>
+        <ul id="fileList-a"></ul>
     </div>
     <div class="modal-info-content-solicitacao">
         <span class="close-button-soli">&times;</span>
         <h3 id="modal-ins-a">Solicitação</h3>
         <h3 id="modal-ins-nome-s"></h3>
+        <p id="modal-ins-religiao-s"></p>
         <h4>Informações Básicas</h4>
         <p id="modal-ins-nascimento-s"></p>
         <p id="modal-ins-morte-s"></p>
@@ -75,8 +82,18 @@ include 'includes/config.php';
         <hr>
         <h4>Historia e Acontecimentos</h4>
         <p id="modal-ins-resumo-s"></p>
+        <h4>Documentos:</h4>
+        <ul id="fileList-s"></ul>
     </div>
 </div>
+</div>
+
+<!-- Modal de Imagem -->
+<div id="imageModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" id="closeImageModal">&times;</span>
+        <div id="fileContainer"></div>
+    </div>
 </div>
 
 <div id="popupOverlay" class="popup-overlay">
@@ -84,7 +101,11 @@ include 'includes/config.php';
       <h2>Aviso</h2>
       <p>Usuario sem permissão para acessar essa tela.</p>
       <p> Você será redirecionado para outra página em breve.</p>
+    </div>
 </div>
+
+
+
 </body>
 <script>
 
@@ -116,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function CarregaTabela(){
+    var usuario = ObterUsuario();
     const tabelaValidacao = document.getElementById("tabela-validacao").getElementsByTagName('tbody')[0];
     tabelaValidacao.innerHTML = ''; 
     const modal = document.getElementById("infoModal");
@@ -127,6 +149,8 @@ async function CarregaTabela(){
     const modalCasamento = document.getElementById("modal-ins-casamento");
     const modalFilhos = document.getElementById("modal-ins-filhos");
     const modalResumo = document.getElementById("modal-ins-resumo");
+    const modalReligiao = document.getElementById("modal-ins-religiao");
+    const fileList = document.getElementById("fileList");
     //Atual
     const modalNomeA = document.getElementById("modal-ins-nome-a");
     const modalNascimentoA = document.getElementById("modal-ins-nascimento-a");
@@ -134,6 +158,8 @@ async function CarregaTabela(){
     const modalCasamentoA = document.getElementById("modal-ins-casamento-a");
     const modalFilhosA = document.getElementById("modal-ins-filhos-a");
     const modalResumoA = document.getElementById("modal-ins-resumo-a");
+    const modalReligiaoA = document.getElementById("modal-ins-religiao-a");
+    const fileListA = document.getElementById("fileList-a");
     //Solicitacao
     const modalNomeS = document.getElementById("modal-ins-nome-s");
     const modalNascimentoS = document.getElementById("modal-ins-nascimento-s");
@@ -141,9 +167,11 @@ async function CarregaTabela(){
     const modalCasamentoS = document.getElementById("modal-ins-casamento-s");
     const modalFilhosS = document.getElementById("modal-ins-filhos-s");
     const modalResumoS = document.getElementById("modal-ins-resumo-s");
+    const modalReligiaoS = document.getElementById("modal-ins-religiao-s");
+    const fileListS = document.getElementById("fileList-s");
 
     try {
-        var urlPessoa = "http://127.0.0.1:8000/api/validacoes";
+        var urlPessoa = "<?php echo $baseAPI; ?>validacoes";
         const responsePessoa = await fetch(urlPessoa, {
           method: 'GET',
           headers: {
@@ -246,7 +274,7 @@ async function CarregaTabela(){
                 }
             });
 
-            function abrirModalUpdate(pessoa) {
+            async function abrirModalUpdate(pessoa) {
                 console.log(pessoa);
                 modalNomeS.textContent = pessoa.pessoa.Nome;
                 modalNascimentoS.textContent = "Nasceu em "+formatarData(pessoa.pessoa.Data_nascimento)+" em "+pessoa.pessoa.Local_nascimento;
@@ -254,18 +282,93 @@ async function CarregaTabela(){
                 modalCasamentoS.textContent = pessoa.pessoaOriginal.conjuge.Pessoa_id != null || pessoa.pessoaOriginal.conjuge.length > 0 ? "Casou-se em "+( formatarData(pessoa.pessoa.Data_casamento) ?? "Data de casamento não informada")+" com "+pessoa.pessoaOriginal.conjuge.Nome : "Não se casou." ;
                 modalFilhosS.textContent = pessoa.pessoaOriginal.descendentes != null && pessoa.pessoaOriginal.descendentes.length > 0 ? "Tiveram os filhos: "+stringFilhos(pessoa.pessoaOriginal.descendentes) : "Não tiveram filhos.";
                 modalResumoS.textContent = pessoa.pessoa.Resumo;
-                console.log(pessoa.pessoaOriginal);
+                modalReligiaoS.textContent = pessoa.pessoa.Religiao;
+
+                try {
+                    const url = `<?php echo $baseAPI; ?>documentos/solicitacao/${pessoa.pessoa.Pessoa_id_solicitacao}`;
+                    const responseDocumentos = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (responseDocumentos.ok) {
+                        const data = await responseDocumentos.json();
+                        console.log(data);
+                        const files = data.model;
+                        fileListS.innerHTML = '';
+
+                        files.forEach(file => {
+                            const listItem = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = "#";
+                            link.textContent = file.nome;
+                            link.classList.add("listaDocumento");
+                            if (file.privado == 1 && (usuario == null || usuario.administrador == 1)) {
+                                link.textContent = file.nome +" "+"🔒";
+                            }else{
+                                link.onclick = function(event) {
+                                    event.preventDefault();
+                                    mostrarImagem(file.caminho); 
+                                };
+                            }
+                            listItem.appendChild(link);
+                            fileListS.appendChild(listItem);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar documentos:', error);
+                }
+
                 modalNomeA.textContent = pessoa.pessoaOriginal.pessoa.Nome;
                 modalNascimentoA.textContent = "Nasceu em "+formatarData(pessoa.pessoaOriginal.pessoa.Data_nascimento)+" em "+pessoa.pessoaOriginal.pessoa.Local_nascimento;
                 modalMorteA.textContent = pessoa.pessoaOriginal.pessoa.Data_obito != null ? "Faleceu "+formatarData(pessoa.pessoaOriginal.pessoa.Data_obito) ?? "Data de morte não informada"+ " em "+pessoa.pessoaOriginal.pessoa.Local_sepultamento : null;
                 modalCasamentoA.textContent = pessoa.pessoaOriginal.conjuge.Pessoa_id != null || pessoa.pessoaOriginal.conjuge.length > 0 ? "Casou-se em "+( formatarData(pessoa.pessoaOriginal.pessoa.Data_casamento) ?? "Data de casamento não informada")+" com "+pessoa.pessoaOriginal.conjuge.Nome : "Não se casou." ;
                 modalFilhosA.textContent = pessoa.pessoaOriginal.descendentes != null && pessoa.pessoaOriginal.descendentes.length > 0 ? "Tiveram os filhos: "+stringFilhos(pessoa.pessoaOriginal.descendentes) : "Não tiveram filhos.";
                 modalResumoA.textContent = pessoa.pessoaOriginal.pessoa.Resumo;
+                modalReligiaoA.textContent = pessoa.pessoaOriginal.pessoa.Religiao;
+
+                try {
+                    const url = `<?php echo $baseAPI; ?>documentos/${pessoa.pessoaOriginal.pessoa.Pessoa_id}`;
+                    const responseDocumentos = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (responseDocumentos.ok) {
+                        const data = await responseDocumentos.json();
+                        const files = data.model;
+                        fileListA.innerHTML = '';
+
+                        files.forEach(file => {
+                            const listItem = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = "#";
+                            link.textContent = file.nome;
+                            link.classList.add("listaDocumento");
+                            if (file.privado == 1 && (usuario == null || usuario.administrador == 1)) {
+                                link.textContent = file.nome +" "+"🔒";
+                            }else{
+                                link.onclick = function(event) {
+                                    event.preventDefault();
+                                    mostrarImagem(file.caminho); 
+                                };
+                            }
+                            listItem.appendChild(link);
+                            fileListA.appendChild(listItem);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar documentos:', error);
+                }
 
                 modalSolicitacao.style.display = "block";
             }
 
-            function abrirModalInsert(pessoa) {
+            async function abrirModalInsert(pessoa) {
                 console.log(pessoa);
                 modalNome.textContent = pessoa.pessoa.Nome;
                 modalNascimento.textContent = "Nasceu em "+formatarData(pessoa.pessoa.Data_nascimento)+" em "+pessoa.pessoa.Local_nascimento;
@@ -273,6 +376,44 @@ async function CarregaTabela(){
                 modalCasamento.textContent = pessoa.conjuge.Pessoa_id != null || pessoa.conjuge.length > 0 ? "Casou-se em "+( formatarData(pessoa.pessoa.Data_casamento) ?? "Data de casamento não informada")+" com "+pessoa.conjuge.Nome : "Não se casou." ;
                 modalFilhos.textContent = pessoa.descendentes != null && pessoa.descendentes.length > 0 ? "Tiveram os filhos: "+stringFilhos(pessoa.descendentes) : "Não tiveram filhos.";
                 modalResumo.textContent = pessoa.pessoa.Resumo;
+                modalReligiao.textContent = pessoa.pessoa.Religiao;
+
+                try {
+                    const url = `<?php echo $baseAPI; ?>documentos/${pessoa.pessoa.Pessoa_id}`;
+                    const responseDocumentos = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (responseDocumentos.ok) {
+                        const data = await responseDocumentos.json();
+                        const files = data.model;
+                        fileList.innerHTML = '';
+
+                        files.forEach(file => {
+                            const listItem = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = "#";
+                            link.textContent = file.nome;
+                            link.classList.add("listaDocumento");
+                            if (file.privado == 1 && (usuario == null || usuario.administrador == 1)) {
+                                link.textContent = file.nome +" "+"🔒";
+                            }else{
+                                link.onclick = function(event) {
+                                    event.preventDefault();
+                                    mostrarImagem(file.caminho); 
+                                };
+                            }
+                            listItem.appendChild(link);
+                            fileList.appendChild(listItem);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar documentos:', error);
+                }
+
                 modal.style.display = "block";
             }
 
@@ -296,13 +437,46 @@ async function CarregaTabela(){
             }
             function stringFilhos(filhos) 
             {
-                console.log(filhos);
                 var stringFilhos = "";
                 filhos.forEach(filho => {
                     stringFilhos = stringFilhos + filho.Nome+",";
                 });
                 return stringFilhos;
             }
+
+            function mostrarImagem(caminho) {
+                const imageModal = document.getElementById('imageModal');
+                const fileContainer = document.getElementById('fileContainer');
+                fileContainer.innerHTML = ''; // Limpa o conteúdo anterior
+
+                const fileUrl = "<?php echo($baseURLAquivos); ?>"+caminho;
+                const extension = fileUrl.split('.').pop().toLowerCase();
+                
+                if (extension === 'pdf') {
+                    window.open(fileUrl, '_blank');
+                } else if (extension === 'png' || extension === 'jpeg' || extension === 'jpg') {
+                    const img = document.createElement('img');
+                    img.src = fileUrl;
+                    img.id = "modalImage";
+                    fileContainer.appendChild(img);
+                    imageModal.style.display = "block";
+                } else {
+                    console.error('Formato de arquivo não suportado');
+                }
+            }
+
+            const closeButton = document.getElementsByClassName("close-button")[0];
+            closeButton.onclick = function() {
+                const modal = document.getElementById("imageModal");
+                modal.style.display = "none";
+            };
+
+            window.onclick = function(event) {
+                const modal = document.getElementById("imageModal");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
             
         } else {
           console.error("Erro ao buscar dados da árvore:", responseArvore.status);
@@ -313,7 +487,7 @@ async function CarregaTabela(){
 };
 
 async function validacao(pessoa,tipo,status) {
-                var url = "http://127.0.0.1:8000/api/pessoas";
+                var url = "<?php echo $baseAPI; ?>pessoas";
                 var dataValidacao = {};
                 console.log(pessoa);
                 if(tipo === 1)

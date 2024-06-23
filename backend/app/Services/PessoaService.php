@@ -39,6 +39,7 @@ class PessoaService
         $pessoa->colonizador = $request->input('colonizador', '2');
         $pessoa->Validado = $validado;
         $pessoa->Usuario_id = $request->input('usuario_id');
+        $pessoa->Religiao = $request->input('religiao');
         $pessoa->Data_criacao = now();
         $pessoa->save();
 
@@ -75,6 +76,7 @@ class PessoaService
             'local_nascimento' => $request->input('local_nascimento'),
             'local_sepultamento' => $request->input('local_sepultamento'),
             'resumo' => $request->input('resumo'),
+            'religiao' => $request->input('religiao'),
             'validado' => '2',
         ]);
         $pessoa = Pessoa::find($id);

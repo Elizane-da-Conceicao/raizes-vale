@@ -23,7 +23,7 @@ include 'includes/config.php';
             </select>
         </div>
         <hr>
-        <form id="pessoaForm">
+        <form id="pessoaForm" enctype="multipart/form-data">
             <div id="lados">
                 <div id="input-escrever">
                     <div>
@@ -61,6 +61,13 @@ include 'includes/config.php';
                         <select id="sexo" name="sexo">
                             <option value="Feminino">Feminino</option>
                             <option value="Masculino">Masculino</option>
+                        </select>
+
+                        <label id="labelReligiao" for="religiao" class="form-label">Religião</label>
+                        <select id="religiao" name="religiao">
+                            <option value="Catolica">Católica</option>
+                            <option value="Protestante">Protestante</option>
+                            <option value="Outro">Outro</option>
                         </select>
                     </div>
                 </div>
@@ -124,6 +131,39 @@ function ObterUsuario()
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    function aplicarMascaraData(event) {
+        var input = event.target;
+        var value = input.value.replace(/\D/g, '');
+        var formattedValue = '';
+
+        if (value.length > 0) {
+            formattedValue = value.substring(0, 2);
+        }
+        if (value.length > 2) {
+            formattedValue += '/' + value.substring(2, 4);
+        }
+        if (value.length > 4) {
+            formattedValue += '/' + value.substring(4, 8);
+        }
+        
+        input.value = formattedValue;
+    }
+    function permitirSomenteLetras(event) {
+        var input = event.target;
+        input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚâêîôûÂÊÎÔÛãõÃÕçÇäëïöüÄËÏÖÜ ]/g, '');
+    }
+
+    var textoNome = document.getElementById('nome');
+    var textoSobrenome = document.getElementById('sobrenome');
+    textoNome.addEventListener('input', permitirSomenteLetras);
+    textoSobrenome.addEventListener('input', permitirSomenteLetras);
+
+
+    var dataNasc = document.getElementById('datanascimento');
+    var dataFal = document.getElementById('datafalecimento');
+    dataNasc.addEventListener('input', aplicarMascaraData);
+    dataFal.addEventListener('input', aplicarMascaraData);
+
     var usuario = ObterUsuario();
     if(usuario == null)
     {
@@ -164,6 +204,24 @@ function fecharModal() {
       localStorage.setItem('documentos', JSON.stringify(documentos));
   }
 
+  function transformarData(dataCampo) {
+    if(dataCampo != null)
+    {
+
+        var partesData = dataCampo.split('/');
+        if (partesData.length === 3) {
+            var dia = partesData[0];
+            var mes = partesData[1];
+            var ano = partesData[2];
+        
+            var dataTransformada = ano + '/' + mes + '/' + dia;
+            return dataTransformada;
+        }
+            return null;
+    }
+    return null;
+}
+
   function salvarDocumento() {
       const tipoArquivo = document.getElementById('tipo-arquivo').value;
       const descricao = document.getElementById('descricao').value;
@@ -177,6 +235,7 @@ function fecharModal() {
               const documento = {
                   type: tipoArquivo,
                   description: descricao,
+                  privado: privado,
                   file: e.target.result 
               };
 
@@ -216,18 +275,19 @@ function fecharModal() {
         var dataPessoa = {
             "nome": data.nome +" "+data.sobrenome,
             "sexo": data.sexo.charAt(0),
-            "data_nascimento": data.datanascimento,
-            "data_obito": data.datafalecimento,
+            "data_nascimento": transformarData(data.datanascimento),
+            "data_obito": transformarData(data.datafalecimento),
             "local_nascimento": data.localnascimento,
             "local_sepultamento": data.localsepultamento,
             "resumo": data.historiavida,
             "colonizador": '1',
             "usuario_id": usuarioLogado.idUsuario,
+            "religiao": data.religiao,
         };
         console.log(dataPessoa);
-        
+    
         try {
-            const responsePessoa = await fetch('http://127.0.0.1:8000/api/pessoas', {
+            const responsePessoa = await fetch('<?php echo $baseAPI; ?>pessoas', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -237,6 +297,45 @@ function fecharModal() {
             console.log(responsePessoa);
             if (responsePessoa.ok) {
                 const result = await responsePessoa.json();
+
+                const todosDocumentos = getDocumentos();
+                console.log(todosDocumentos);
+
+                for (const documento of todosDocumentos) {
+                    const { type, description, file, privado } = documento;
+
+                    const arquivoData = {
+                        pessoa_id: result.model.pessoa_id,
+                        Descricao: description,
+                        Tipo_arquivo: type,
+                        arquivo: file,
+                        privado: privado == "true" ? 1 : 0,
+                        usuario_id: usuarioLogado.idUsuario
+                    };
+
+                    try {
+                        const response = await fetch('<?php echo $baseAPI; ?>documentos', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(arquivoData),
+                        });
+
+                        if (response.ok) {
+                            console.log(`Arquivo enviado com sucesso.`);
+                        } else {
+                            console.error(`Erro ao enviar o arquivo.`);
+                        }
+                    } catch (error) {
+                        console.error(`Erro ao enviar o arquivo`, error);
+                    }
+                }
+
+                // Limpar localStorage após o envio bem-sucedido
+                localStorage.removeItem('documentos');
+
+
                 if(relacionamento == "Conjuge")
                 {   
                     if(data.sexo.charAt(0) == "M")
@@ -255,7 +354,7 @@ function fecharModal() {
                         "usuario_id": usuarioLogado.idUsuario,
                     };
 
-                    const responseCasal = await fetch('http://127.0.0.1:8000/api/casais', {
+                    const responseCasal = await fetch('<?php echo $baseAPI; ?>casais', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -275,7 +374,7 @@ function fecharModal() {
                         "Pessoa_id": idPessoa
                     };
 
-                    const responseFilho = await fetch('http://127.0.0.1:8000/api/descendencias', {
+                    const responseFilho = await fetch('<?php echo $baseAPI; ?>descendencias', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -350,7 +449,7 @@ document.getElementById('consulta-nome').addEventListener('input', async functio
         }
         if (nome.length >= 3) { // Fazer a requisição somente se o texto tiver 3 ou mais caracteres
             try {
-                var url = "http://127.0.0.1:8000/api/pessoas/consulta/"+nome;
+                var url = "<?php echo $baseAPI; ?>pessoas/consulta/"+nome;
                 const responsePessoas = await fetch( url, {
                     method: 'GET',
                     headers: {

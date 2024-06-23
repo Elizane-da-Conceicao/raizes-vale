@@ -6,12 +6,16 @@ if (isset($_GET['parametro'])) {
 }
 include 'includes/config.php';
 ?>
+
 <div class="container-header">
-        <?php
-        include 'includes/header.php';
-        ?>
-        <script src="https://balkan.app/js/FamilyTree.js"></script>
-<div id="tree"></div>
+  <?php
+  include 'includes/header.php';
+  ?>
+  <!-- <script src="https://balkan.app/js/FamilyTree.js"></script> -->
+  <script src="assets\js\cdnbalkan.js"></script>
+  <div id="tree">
+    
+  </div>
 </div>
 
 <script>
@@ -20,20 +24,20 @@ include 'includes/config.php';
 
 async function fetchData() {
     try {
-      var urlPessoa = "http://127.0.0.1:8000/api/pessoas/pessoa/<?php echo($parametro) ?>";
+      var urlPessoa = "<?php echo $baseAPI; ?>pessoas/pessoa/<?php echo($parametro) ?>";
       const responsePessoa = await fetch(urlPessoa, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      var url = "http://127.0.0.1:8000/api/arvores/montar/<?php echo($parametro) ?>";
+      var url = "<?php echo $baseAPI; ?>arvores/montar/<?php echo($parametro) ?>";
       if(responsePessoa.ok)
       {
         const dataPessoa = await responsePessoa.json(); 
         if(dataPessoa.model.Colonizador === "1")
         {
-            url = "http://127.0.0.1:8000/api/arvores/montar-pessoa/<?php echo($parametro) ?>";
+            url = "<?php echo $baseAPI; ?>arvores/montar-pessoa/<?php echo($parametro) ?>";
         }
 
        const responseArvore = await fetch(url, {
@@ -44,15 +48,16 @@ async function fetchData() {
        });
  
        if (responseArvore.ok) {
-         const data = await responseArvore.json(); 
-         var family = new FamilyTree(document.getElementById("tree"), {
-           mouseScrool: FamilyTree.action.none,
-           nodeBinding: {
-             field_0: "name"
-           },
-           nodes: PercorreArvore(data.model, null, null, [])
-         });
-       } else {
+          const data = await responseArvore.json(); 
+          var family = new FamilyTree(document.getElementById("tree"), {
+            mouseScrool: FamilyTree.action.none,
+            nodeBinding: {
+              field_0: "name"
+            },
+            nodes: PercorreArvore(data.model, null, null, [])
+          });
+        } 
+        else {
          console.error("Erro ao buscar dados da árvore:", responseArvore.status);
        }
     }

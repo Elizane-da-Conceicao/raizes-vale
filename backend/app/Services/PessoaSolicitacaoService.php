@@ -25,6 +25,7 @@ class PessoaSolicitacaoService
         $pessoa->local_sepultamento = $request->input('local_sepultamento');
         $pessoa->resumo = $request->input('resumo');
         $pessoa->Usuario_id = $request->input('usuario_id');
+        $pessoa->Religiao = $request->input('religiao');
         $pessoa->Motivo = '';
         $pessoa->validacao = '1';
         $pessoa->save();

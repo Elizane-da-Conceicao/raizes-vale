@@ -53,6 +53,11 @@ include 'documento.php';
                         <option value="Masculino">Masculino</option>
                         </select>
 
+                        <label for="religiao" class="form-label">Religião</label>
+                        <select id="religiao" name="religiao">
+                            <option value="Catolico">Católico</option>
+                            <option value="Luterano">Luterano</option>
+                        </select>
                     </div>
                     <div>
                         <label for="documentos" class="form-label">Documentos comprobatórios</label>
@@ -124,6 +129,7 @@ function fecharModal() {
               const documento = {
                   type: tipoArquivo,
                   description: descricao,
+                  privado: privado,
                   file: e.target.result 
               };
 
@@ -139,7 +145,7 @@ function fecharModal() {
 
  async function fetchData() {
             try {
-                var urlPessoa = "http://127.0.0.1:8000/api/pessoas/pessoa/<?php echo($parametro) ?>";
+                var urlPessoa = "<?php echo $baseAPI; ?>pessoas/pessoa/<?php echo($parametro) ?>";
                 const responsePessoa = await fetch(urlPessoa, {
                     method: 'GET',
                     headers: {
@@ -162,6 +168,8 @@ function fecharModal() {
                     document.getElementById('localfalecimento').value = data.Local_sepultamento || '';
                     document.getElementById('historiavida').value = data.Resumo || '';
                     document.getElementById('sexo').value = data.Sexo === "F" ? "Feminino" : "Masculino" || '';
+                    document.getElementById('religiao').value = data.Religiao;
+
                 } else {
                     console.error('Erro ao obter dados da pessoa');
                 }
@@ -192,7 +200,7 @@ function fecharModal() {
         };
         
         try {
-            const responsePessoa = await fetch('http://127.0.0.1:8000/api/pessoas/<?php echo($parametro) ?>', {
+            const responsePessoa = await fetch('<?php echo $baseAPI; ?>pessoas/<?php echo($parametro) ?>', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -206,18 +214,19 @@ function fecharModal() {
                 if(todosDocumentos != null)
                 {
                     for (const documento of todosDocumentos) {
-                        const { type, description, file } = documento;
-    
+                        const { type, description, file , privado} = documento;
+                        console.log(resultPessoa.model);
                         const arquivoData = {
-                            pessoa_id: resultPessoa.model.pessoa_id,
+                            pessoa_id: resultPessoa.model.Pessoa_id,
                             Descricao: description,
                             Tipo_arquivo: type,
                             arquivo: file,
+                            privado: privado == "true" ? 1 : 0,
                             usuario_id: dataPessoa.usuario_id
                         };
     
                         try {
-                            const response = await fetch('http://127.0.0.1:8000/api/documentos', {
+                            const response = await fetch('<?php echo $baseAPI; ?>documentos', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
