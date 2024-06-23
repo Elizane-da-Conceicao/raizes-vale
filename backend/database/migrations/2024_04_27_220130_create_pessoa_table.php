@@ -14,20 +14,21 @@ class CreatePessoaTable extends Migration
     public function up()
     {
         Schema::create('pessoa', function (Blueprint $table) {
-            $table->increments('Pessoa_id');
-            $table->string('Nome', 120)->nullable();
-            $table->enum('Sexo', ['M', 'F'])->nullable();
+            $table->increments('pessoa_id');
+            $table->string('Nome');
+            $table->char('Sexo', 1);
             $table->date('Data_nascimento')->nullable();
             $table->date('Data_casamento')->nullable();
             $table->date('Data_obito')->nullable();
-            $table->string('Local_nascimento', 255)->nullable();
-            $table->string('Local_sepultamento', 255)->nullable();
-            $table->string('Resumo')->nullable();
-            $table->enum('Colonizador', ['1', '2'])->default('2');
-            $table->enum('Validacao', ['1', '2', '3'])->nullable();
-            $table->string('Motivo');
-            $table->date('Data_criacao')->nullable();
-            $table->unsignedBigInteger('usuario_id');
+            $table->string('Local_nascimento')->nullable();
+            $table->string('Local_sepultamento')->nullable();
+            $table->timestamp('Data_criacao')->useCurrent();
+            $table->boolean('Colonizador')->default(false);
+            $table->integer('Usuario_id');
+            $table->text('Resumo')->nullable();
+            $table->boolean('Validado')->default(false);
+            $table->string('Motivo')->nullable();
+            $table->string('Religiao')->nullable();
         });
     }
 
